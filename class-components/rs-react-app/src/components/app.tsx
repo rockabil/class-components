@@ -1,7 +1,10 @@
 import { Component } from "react";
 import { type SearchResult } from "../types/types";
 import { SearchForm } from "./search-form";
+import { ResultsTable } from "./results-table";
+import { searchAPI } from "../api";
 
+const STORAGE_KEY = 'lastSearchQuery';
 interface AppState {
     query: string;
     results: SearchResult[];
@@ -19,6 +22,21 @@ export class App extends Component<{}, AppState> {
         hasSearched: false,    
     };
 
+    componentDidMount() {
+        const savedQuery = localStorage.getItem(STORAGE_KEY);
+        if (savedQuery && savedQuery.trim()) {
+            this.handleSearch(savedQuery);
+        }
+    }
+
+    private saveQueryToStorage(query: string) {
+        if (query.trim()) {
+            localStorage.setItem(STORAGE_KEY, query);
+        } else {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+    }
+
     handleSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       this.setState({
@@ -27,8 +45,11 @@ export class App extends Component<{}, AppState> {
         hasSearched: false,
         query: searchQuery,
       });
+      this.saveQueryToStorage('');
       return;
     }
+
+    this.saveQueryToStorage(searchQuery);
 
     this.setState({
       loading: true,
@@ -56,11 +77,13 @@ export class App extends Component<{}, AppState> {
 
 render() {    
     const { results, loading, error, hasSearched } = this.state;
+    const initialQuery = localStorage.getItem(STORAGE_KEY) || undefined;
+
     return (
         <div className="app-container">
         <section className="search-section">
             <h2>Search</h2>
-        <SearchForm onSearch={this.handleSearch} loading={loading} />
+        <SearchForm onSearch={this.handleSearch} loading={loading} initialQuery={initialQuery}/>
         </section>
         <section className="results-section">
             <h2>Results</h2>
