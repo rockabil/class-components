@@ -3,17 +3,20 @@ import { Component, type FormEvent, type ChangeEvent } from "react";
 interface SearchFormProps {
     onSearch: (query: string) => void;
     loading: boolean;
+    initialQuery?: string;
 }
 
 interface SearchFormState {
     query: string;
-
 }
 
 export class SearchForm extends Component<SearchFormProps, SearchFormState> {
-    state: SearchFormState = {
-        query: '',
-    };
+    constructor(props: SearchFormProps) {
+        super(props);
+        this.state = {
+            query: props.initialQuery || '',
+        };
+    }
 
     handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({ query: e.target.value });
@@ -28,7 +31,7 @@ export class SearchForm extends Component<SearchFormProps, SearchFormState> {
     };
 
     handleClear = () => {
-        this.setState =({ query: ''});
+        this.setState({ query: '' });
         this.props.onSearch('');
     };
 
@@ -38,7 +41,7 @@ export class SearchForm extends Component<SearchFormProps, SearchFormState> {
 
         return (
             <form className="search-form" onSubmit={this.handleSubmit}>
-                <input type="text" value={query} onChange={this.handleInputChange} placeholder="Insert request..." disabled={loading} className="search-input" />
+                <input type="text" value={query} onChange={this.handleInputChange} placeholder="Enter request..." disabled={loading} className="search-input" />
                 <button type="submit" disabled={loading} className="search-button">
                     {loading ? 'Search...' : 'Find'}
                 </button>
@@ -46,7 +49,7 @@ export class SearchForm extends Component<SearchFormProps, SearchFormState> {
                     Clear
                 </button>
             </form>
-        )
+        );
     }
 
 }
