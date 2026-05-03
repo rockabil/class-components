@@ -1,3 +1,11 @@
 export const Footer = () => {
-    return ()
+    return (
+        <footer className="app-footer">
+            <div>
+                <p>2026</p>
+            </div>
+            <div>RSSchoolSVG</div>
+            <div>GitHub</div>
+        </footer>
+    )
 }
