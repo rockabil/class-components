@@ -1,9 +1,8 @@
 import { Footer, Main, Header } from './ui'
 
-const App = () => {
+export const App = () => {
   return(
-    <div>
-      <h1>Search App</h1>
+    <div>      
       <Header />
       <Main />
       <Footer />
@@ -11,4 +10,3 @@ const App = () => {
   )
 }
 
-export default App
