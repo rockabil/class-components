@@ -28,7 +28,8 @@
   font-weight: 500;
 }
 
-.search-button {
+.search-button,
+.clear-button {
   background: var(--accent);
   color: var(--text-color);
 }
@@ -38,12 +39,8 @@
   transform: translateY(-1px);
 }
 
-.clear-button {
-  background: var(--accent);
-  color: var(--text-h);
-}
-
 .clear-button:hover {
   background: var(--accent-border);
+  color: var(--text-h);
 }
 
