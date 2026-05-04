@@ -27,6 +27,6 @@ export const searchAPI = async (
     return data.characters.map((char) => ({
         id: char.uid,
         name: char.name,
-        description: char.name,
+        description: char.bio || char.name,
     }));
 };

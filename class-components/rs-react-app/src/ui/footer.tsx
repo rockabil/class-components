@@ -1,3 +1,5 @@
+import './module.css'
+
 export const Footer = () => {
     return (
         <footer className="app-footer">

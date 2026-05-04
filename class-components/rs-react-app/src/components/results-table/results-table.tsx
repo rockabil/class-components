@@ -1,10 +1,10 @@
 import { Component } from "react";
-import type { SearchResult } from "../types/types";
-import { ErrorMessage } from "./error-message";
+import type { SearchResult } from "../../types/types";
+import { ErrorMessage } from "../error-message/error-message";
 
 interface ResultsTableProps {
     results: SearchResult[];
-    loading: boolean; 
+    loading: boolean;
     error: string | null;
     hasSearched: boolean;
 }
@@ -22,7 +22,7 @@ export class ResultsTable extends Component<ResultsTableProps> {
         }
 
         if (!hasSearched) {
-            return <div className="info-message">Enter your query and click &quot;Find&quot;</div>            
+            return <div className="info-message">Enter your query and click &quot;Find&quot;</div>
         }
 
         if (results.length === 0) {

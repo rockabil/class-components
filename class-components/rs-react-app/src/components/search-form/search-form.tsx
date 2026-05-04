@@ -1,4 +1,5 @@
 import { Component, type FormEvent, type ChangeEvent } from "react"; 
+import './module.css';
 
 interface SearchFormProps {
     onSearch: (query: string) => void;

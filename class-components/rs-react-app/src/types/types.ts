@@ -7,6 +7,7 @@ export interface SearchResult {
 export interface StapiCharacter {
   uid: string;
   name: string;
+  bio: string;
 }
 
 export interface StapiSearchResponse {
