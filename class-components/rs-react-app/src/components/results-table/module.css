@@ -1,11 +1,13 @@
 .results-table {
   width: 100%;
+  display: flex;
+  justify-content: space-between;
   border-collapse: collapse;
 }
 
 .results-table th,
 .results-table td {
-  text-align: left;
+  text-align: justify;
   padding: 0.75rem;
   border-bottom: 1px solid var(--border);
 }
