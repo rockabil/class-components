@@ -1,0 +1,30 @@
+.results-table {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-collapse: collapse;
+}
+
+.results-table th,
+.results-table td {
+  text-align: justify;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.results-table th {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.loading,
+.info-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
