@@ -14,7 +14,7 @@ export class ResultsTable extends Component<ResultsTableProps> {
         const { results, loading, error, hasSearched } = this.props;
 
         if (loading) {
-            return <div className="loading">Loading...</div>
+            return <div className="loading">Loading characters from Star Trek universe...</div>
         }
 
         if (error) {
@@ -26,7 +26,7 @@ export class ResultsTable extends Component<ResultsTableProps> {
         }
 
         if (results.length === 0) {
-            return <div className="info-message">Nothing found</div>
+            return <div className="info-message">No characters found matching your query</div>
         }
 
         return (

@@ -2,83 +2,80 @@ import { Component } from "react";
 import { type SearchResult } from "../../types/types";
 import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
-import { searchAPI } from "../../api";
+import { loadAllCharactersWithDetails } from "../../api";
 import './module.css';
 
 const STORAGE_KEY = 'lastSearchQuery';
 interface AppState {
-    query: string;
-    results: SearchResult[];
+    allResults: SearchResult[];
+    filteredResults: SearchResult[];
     loading: boolean;
     error: string | null;
-    hasSearched: boolean;
+    hasLoaded: boolean;
 }
 
 export class App extends Component<object, AppState> {
     state: AppState = {
-        query: '',
-        results: [],
+        allResults: [],
+        filteredResults: [],
         loading: false,
         error: null,
-        hasSearched: false,
+        hasLoaded: false,
     };
 
-    componentDidMount() {
+   async componentDidMount() {
+        await this.loadAlldata();
+
         const savedQuery = localStorage.getItem(STORAGE_KEY);
         if (savedQuery && savedQuery.trim()) {
-            this.handleSearch(savedQuery);
+            this.filterResults(savedQuery);
         }
     }
 
-    private saveQueryToStorage(query: string) {
-        if (query.trim()) {
-            localStorage.setItem(STORAGE_KEY, query);
-        } else {
-            localStorage.removeItem(STORAGE_KEY);
-        }
-    }
-
-    handleSearch = async (searchQuery: string) => {
-        if (!searchQuery.trim()) {
-            this.setState({
-                results: [],
-                error: null,
-                hasSearched: false,
-                query: searchQuery,
-            });
-            this.saveQueryToStorage('');
-            return;
-        }
-
-        this.saveQueryToStorage(searchQuery);
-
-        this.setState({
-            loading: true,
-            error: null,
-            results: [],
-            hasSearched: true,
-            query: searchQuery,
-        });
+    loadAlldata = async () => {
+        this.setState({  loading: true, error: null });
 
         try {
-            const data = await searchAPI(searchQuery);
+            const data = await loadAllCharactersWithDetails();
             this.setState({
-                results: data,
+                allResults: data,
+                filteredResults: data,
                 loading: false,
-                error: data.length === 0 ? 'Nothing to find' : null,
+                hasLoaded: true,
             });
         } catch (err) {
             this.setState({
-                error: err instanceof Error ? err.message : 'Unknown error',
-                results: [],
+                error: err instanceof Error ? err.message : 'Failed to load data',
                 loading: false,
             });
         }
+    };   
+
+    filterResults = (searchQuery: string) => {
+        const { allResults } = this.state;
+        const trimmedQuery = searchQuery.trim();
+        
+        if (!trimmedQuery) {            
+            this.setState({ filteredResults: allResults });
+            localStorage.removeItem(STORAGE_KEY);
+            return;
+        }        
+        
+        const filtered = allResults.filter(item =>
+            item.name.toLowerCase().includes(trimmedQuery.toLowerCase())
+        );
+        
+        this.setState({ filteredResults: filtered });
+        localStorage.setItem(STORAGE_KEY, trimmedQuery);
+    };
+
+    handleSearch = async (searchQuery: string) => {
+        this.filterResults(searchQuery);       
     };
 
     render() {
-        const { results, loading, error, hasSearched } = this.state;
-        const initialQuery = localStorage.getItem(STORAGE_KEY) || undefined;
+        const { filteredResults, loading, error, hasLoaded } = this.state;
+        const initialQuery = localStorage.getItem(STORAGE_KEY) || "";
 
         return (
             <div className="app-container">
@@ -88,7 +85,7 @@ export class App extends Component<object, AppState> {
                 </section>
                 <section className="results-section">
                     <h2>Results</h2>
-                    <ResultsTable results={results} loading={loading} error={error} hasSearched={hasSearched} />
+                    <ResultsTable results={filteredResults} loading={loading} error={error} hasSearched={hasLoaded} />
                 </section>
             </div>
         );

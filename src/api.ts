@@ -1,12 +1,51 @@
-import type { SearchResult, StapiCharacter, StapiSearchResponse } from "./types/types";
+import type { SearchResult, StapiCharacter } from "./types/types";
 
 const STAPI_BASE_URL = 'https://stapi.co/api/v1/rest';
+
+const searchCharacters = async (name: string, pageNumber = 0, pageSize = 50): Promise<StapiCharacter[]> => {
+    const url = `${STAPI_BASE_URL}/character/search`;
+
+    const formData = new URLSearchParams();
+    formData.append('name', name);
+    formData.append('pageNumber', pageNumber.toString());
+    formData.append('pageSize', pageSize.toString());
+    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.characters || [];
+};
+
+const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter> => {
+    const url = `${STAPI_BASE_URL}/character/${uid}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch details for ${uid}`);
+    }
+
+    const data = await response.json();
+    return data.character;
+};
 
 const generateDescription = (character: StapiCharacter): string => {
     const details: string[] = [];
     
     if (character.gender) {
-        details.push(`Gender: ${character.gender === 'M' ? 'Male' : character.gender === 'F' ? 'Female' : character.gender}`);
+        const genderText = character.gender === 'M' ? 'Male' : 
+                          character.gender === 'F' ? 'Female' : 
+                          character.gender;
+        details.push(`Gender: ${genderText}`);
     }
     
     if (character.deceased === true) {
@@ -20,16 +59,14 @@ const generateDescription = (character: StapiCharacter): string => {
     if (character.fictionalCharacter === true) {
         details.push('Fictional character');
     }
-    
-    if (character.species?.name) {
-        details.push(`Species: ${character.species.name}`);
-    }
-    
-    if (character.organizations?.length) {
-        const orgNames = character.organizations.slice(0, 2).map(org => org.name).join(', ');
-        details.push(`Organizations: ${orgNames}${character.organizations.length > 2 ? '...' : ''}`);
-    }
-    
+
+    if (character.bio) {
+        const shortBio = character.bio.length > 100 
+            ? character.bio.slice(0, 100) + '...' 
+            : character.bio;
+        details.push(shortBio);
+    }    
+        
     if (details.length === 0) {
         return 'No additional information available';
     }
@@ -37,37 +74,37 @@ const generateDescription = (character: StapiCharacter): string => {
     return details.join(' • ');
 };
 
-export const searchAPI = async (
-    query: string,
-    pageNumber = 0,
-    pageSize = 10
-): Promise<SearchResult[]> => {
-    const url = new URL(`${STAPI_BASE_URL}/character/search`);
-    url.searchParams.append('name', query);
-    url.searchParams.append('pageNumber', pageNumber.toString());
-    url.searchParams.append('pageSize', pageSize.toString());
+export const loadAllCharactersWithDetails = async (): Promise<SearchResult[]> => {
+    const characters = await searchCharacters('q', 0, 100);
 
-    const response = await fetch(url.toString());
-
-    if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+    if (!characters.length) {
+        throw new Error ('No characters found');
     }
 
-    const data: StapiSearchResponse = await response.json();
+    const results: SearchResult[] = [];
 
-    if (!data.characters?.length) {
-        throw new Error('Nothing found');
+    for (const char of characters) {
+        try {
+            const details = await fetchCharacterDetails(char.uid);
+
+            results.push({
+                id: details.uid,
+                name: details.name,
+                description: generateDescription(details),
+                gender: details.gender,
+                deceased: details.deceased,
+                hologram: details.hologram,
+                fictionalCharacter: details.fictionalCharacter,
+                species: details.species?.name,
+                organizations: details.organizations?.map(org => org.name),
+            });
+        } catch {
+            results.push({
+                id: char.uid,
+                name: char.name,
+                description: 'Information not available',
+            });
+        }
     }
-
-    return data.characters.map((char: StapiCharacter) => ({
-        id: char.uid,
-        name: char.name,
-        description: generateDescription(char),
-        gender: char.gender,
-         deceased: char.deceased,
-        hologram: char.hologram,
-        fictionalCharacter: char.fictionalCharacter,
-        species: char.species?.name,
-        organizations: char.organizations?.map(org => org.name),
-    }));
-};
+    return results;
+}
