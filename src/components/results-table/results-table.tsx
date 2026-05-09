@@ -34,6 +34,10 @@ export class ResultsTable extends Component<ResultsTableProps> {
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Gender</th>
+                        <th>Species</th>
+                        <th>Status</th>
+                        <th>Organization</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -41,6 +45,12 @@ export class ResultsTable extends Component<ResultsTableProps> {
                     {results.map((item) => (
                         <tr key={item.id}>
                             <td>{item.name}</td>
+                            <td>{item.gender === 'M' ? '♂ Male' : item.gender === 'F' ? '♀ Female' : item.gender || '—'}</td>
+                            <td>
+                                {item.deceased ? 'X Deceased' : '✓ Alive'}
+                                {item.hologram && ' (Hologram)'}
+                            </td>
+                            <td>{item.organizations?.slice(0, 2).join(', ') || '-'}</td>
                             <td>{item.description}</td>
                         </tr>
                     ))}
