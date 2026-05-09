@@ -1,6 +1,41 @@
-import type { SearchResult, StapiSearchResponse } from "./types/types";
+import type { SearchResult, StapiCharacter, StapiSearchResponse } from "./types/types";
 
 const STAPI_BASE_URL = 'https://stapi.co/api/v1/rest';
+
+const generateDescription = (character: StapiCharacter): string => {
+    const details: string[] = [];
+    
+    if (character.gender) {
+        details.push(`Gender: ${character.gender === 'M' ? 'Male' : character.gender === 'F' ? 'Female' : character.gender}`);
+    }
+    
+    if (character.deceased === true) {
+        details.push('Deceased');
+    }
+    
+    if (character.hologram === true) {
+        details.push('Hologram');
+    }
+    
+    if (character.fictionalCharacter === true) {
+        details.push('Fictional character');
+    }
+    
+    if (character.species?.name) {
+        details.push(`Species: ${character.species.name}`);
+    }
+    
+    if (character.organizations?.length) {
+        const orgNames = character.organizations.slice(0, 2).map(org => org.name).join(', ');
+        details.push(`Organizations: ${orgNames}${character.organizations.length > 2 ? '...' : ''}`);
+    }
+    
+    if (details.length === 0) {
+        return 'No additional information available';
+    }
+    
+    return details.join(' • ');
+};
 
 export const searchAPI = async (
     query: string,
@@ -24,9 +59,15 @@ export const searchAPI = async (
         throw new Error('Nothing found');
     }
 
-    return data.characters.map((char) => ({
+    return data.characters.map((char: StapiCharacter) => ({
         id: char.uid,
         name: char.name,
-        description: char.bio || char.name,
+        description: generateDescription(char),
+        gender: char.gender,
+         deceased: char.deceased,
+        hologram: char.hologram,
+        fictionalCharacter: char.fictionalCharacter,
+        species: char.species?.name,
+        organizations: char.organizations?.map(org => org.name),
     }));
 };
