@@ -19,6 +19,7 @@ export interface StapiCharacter {
   fictionalCharacter?: boolean;
   species?: { uid: string; name: string };
   organizations?: Array<{ uid: string; name: string }>;
+  bio?: string;
 }
 
 export interface StapiSearchResponse {
