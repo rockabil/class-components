@@ -1,0 +1,39 @@
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  color: var(--text-h);
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+  overscroll-behavior: contain;
+  touch-action: none;
+}
+
+.loader {
+  width: var(--loader-size, 80px);
+  height: var(--loader-size, 80px);
+  border: var(--loader-thickness, 2.5px) solid color-mix(in srgb, var(--accent) 10%, transparent);
+  border-top-color: var(--loader-color, var(--accent));
+  border-right-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--accent) 5%, transparent);
+  border-left-color: color-mix(in srgb, var(--accent) 15%, transparent);
+  border-radius: 50%;
+  animation: spin var(--loader-speed, 0.8s) linear infinite;
+  box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 20%, transparent);
+}
