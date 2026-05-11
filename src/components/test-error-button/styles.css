@@ -1,0 +1,28 @@
+.test-error-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--error-bg-color);
+    color: var(--error-text-color);
+    border: var(--error-border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.test-error-button:hover {
+    background-color: var(--error-border-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--error-border-shadow);
+}
+
+.test-error-button:active {
+    transform: translateY(0);
+}
+
+.test-error-icon {
+    font-size: 1rem;
+}

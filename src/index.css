@@ -30,6 +30,7 @@ body {
   --error-text-color: #dc2626;
   --error-bg-color: #282c34;
   --error-border-color: #921818;
+  --error-border-shadow: rgba(220, 38, 38, 0.3);
 
 }
 
