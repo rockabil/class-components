@@ -10,7 +10,7 @@ import type { StapiCharacter } from './types/types';
 
 // Мок глобального fetch
 const mockFetch = vi.fn();
-global.fetch = mockFetch;
+globalThis.fetch = mockFetch;
 
 describe('API Functions', () => {
   beforeEach(() => {
