@@ -1,12 +1,15 @@
+import { ErrorBoundary } from './components/error-boundary/error-boundary'
 import { Footer, Main, Header } from './ui'
 
 export const App = () => {
   return(
-    <div>      
-      <Header />
-      <Main />
-      <Footer />
-    </div>
-  )
-}
+    <ErrorBoundary>
+      <div> 
+        <Header />
+        <Main />
+        <Footer />
+      </div>
+    </ErrorBoundary>    
+  );
+};
 
