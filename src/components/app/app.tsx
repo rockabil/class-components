@@ -15,6 +15,8 @@ interface AppState {
 }
 
 export class App extends Component<object, AppState> {
+     private lastSearchQuery: string = '';
+
     state: AppState = {
         allResults: [],
         filteredResults: [],
@@ -28,6 +30,7 @@ export class App extends Component<object, AppState> {
 
         const savedQuery = localStorage.getItem(STORAGE_KEY);
         if (savedQuery && savedQuery.trim()) {
+            this.lastSearchQuery = savedQuery.trim();
             this.filterResults(savedQuery);
         }
     }
@@ -58,18 +61,37 @@ export class App extends Component<object, AppState> {
         if (!trimmedQuery) {            
             this.setState({ filteredResults: allResults });
             localStorage.removeItem(STORAGE_KEY);
+            this.lastSearchQuery = '';
+            return;
+        }
+        
+        if (trimmedQuery === this.lastSearchQuery) {
+            // Запрос не изменился – возвращаемся без действий
             return;
         }        
+   
+        this.lastSearchQuery = trimmedQuery;
         
         const filtered = allResults.filter(item =>
             item.name.toLowerCase().includes(trimmedQuery.toLowerCase())
         );
         
         this.setState({ filteredResults: filtered });
-        localStorage.setItem(STORAGE_KEY, trimmedQuery);
+        localStorage.setItem(STORAGE_KEY, trimmedQuery);      
+       
     };
 
     handleSearch = async (searchQuery: string) => {
+        const trimmedQuery = searchQuery.trim();
+
+        if (!trimmedQuery && !this.lastSearchQuery && this.state.filteredResults.length === this.state.allResults.length) {
+            return;
+        }
+
+        if (trimmedQuery === this.lastSearchQuery) {
+            return;
+        }
+
         this.filterResults(searchQuery);       
     };
 
