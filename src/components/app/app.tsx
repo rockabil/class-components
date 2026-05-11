@@ -1,11 +1,14 @@
+// src/components/app/app.tsx
 import { Component } from "react";
 import { type SearchResult } from "../../types/types";
 import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
+import { Loader } from "../loader";
 import { loadAllCharactersWithDetails } from "../../api";
 import './module.css';
 
 const STORAGE_KEY = 'lastSearchQuery';
+
 interface AppState {
     allResults: SearchResult[];
     filteredResults: SearchResult[];
@@ -15,8 +18,6 @@ interface AppState {
 }
 
 export class App extends Component<object, AppState> {
-     private lastSearchQuery: string = '';
-
     state: AppState = {
         allResults: [],
         filteredResults: [],
@@ -25,18 +26,17 @@ export class App extends Component<object, AppState> {
         hasLoaded: false,
     };
 
-   async componentDidMount() {
-        await this.loadAlldata();
+    async componentDidMount() {
+        await this.loadAllData();
 
         const savedQuery = localStorage.getItem(STORAGE_KEY);
         if (savedQuery && savedQuery.trim()) {
-            this.lastSearchQuery = savedQuery.trim();
             this.filterResults(savedQuery);
         }
     }
 
-    loadAlldata = async () => {
-        this.setState({  loading: true, error: null });
+    loadAllData = async () => {
+        this.setState({ loading: true, error: null });
 
         try {
             const data = await loadAllCharactersWithDetails();
@@ -61,37 +61,18 @@ export class App extends Component<object, AppState> {
         if (!trimmedQuery) {            
             this.setState({ filteredResults: allResults });
             localStorage.removeItem(STORAGE_KEY);
-            this.lastSearchQuery = '';
-            return;
-        }
-        
-        if (trimmedQuery === this.lastSearchQuery) {
-            // Запрос не изменился – возвращаемся без действий
             return;
         }        
-   
-        this.lastSearchQuery = trimmedQuery;
         
         const filtered = allResults.filter(item =>
             item.name.toLowerCase().includes(trimmedQuery.toLowerCase())
         );
         
         this.setState({ filteredResults: filtered });
-        localStorage.setItem(STORAGE_KEY, trimmedQuery);      
-       
+        localStorage.setItem(STORAGE_KEY, trimmedQuery);
     };
 
-    handleSearch = async (searchQuery: string) => {
-        const trimmedQuery = searchQuery.trim();
-
-        if (!trimmedQuery && !this.lastSearchQuery && this.state.filteredResults.length === this.state.allResults.length) {
-            return;
-        }
-
-        if (trimmedQuery === this.lastSearchQuery) {
-            return;
-        }
-
+    handleSearch = (searchQuery: string) => {
         this.filterResults(searchQuery);       
     };
 
@@ -100,16 +81,30 @@ export class App extends Component<object, AppState> {
         const initialQuery = localStorage.getItem(STORAGE_KEY) || "";
 
         return (
-            <div className="app-container">
-                <section className="search-section">
-                    <h2>Search</h2>
-                    <SearchForm onSearch={this.handleSearch} loading={loading} initialQuery={initialQuery} />
-                </section>
-                <section className="results-section">
-                    <h2>Results</h2>
-                    <ResultsTable results={filteredResults} loading={loading} error={error} hasSearched={hasLoaded} />
-                </section>
-            </div>
+            <>
+                {/* Показываем лоадер во время загрузки */}
+                {loading && <Loader size={60} speed={0.8} thickness={3} />}
+                
+                <div className="app-container">
+                    <section className="search-section">
+                        <h2>Search</h2>
+                        <SearchForm 
+                            onSearch={this.handleSearch} 
+                            loading={loading} 
+                            initialQuery={initialQuery}
+                        />
+                    </section>
+                    <section className="results-section">
+                        <h2>Results ({filteredResults.length})</h2>
+                        <ResultsTable 
+                            results={filteredResults} 
+                            loading={loading} 
+                            error={error} 
+                            hasSearched={hasLoaded}
+                        />
+                    </section>
+                </div>
+            </>
         );
     }
 }
