@@ -62,7 +62,7 @@ describe('App Component', () => {
 
     it('should show the Loader when is loading', () => {
       mockLoadAll.mockImplementation(
-        () => new Promise(resolve => setTimeout(() => resolve(mockCharacters), 100))
+        () => new Promise<SearchResult[]>(() => {})
       );
       
       render(<App />);
