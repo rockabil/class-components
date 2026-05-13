@@ -15,10 +15,13 @@ export default defineConfig({
             exclude: [
                 'src/**/*.test.{js,jsx,ts,tsx}',
                 'src/**/*.spec.{js,jsx,ts,tsx}',
+                'src/main.tsx',
                 'src/index.{js,jsx,ts,tsx}',
                 'src/setupTests.{js,ts}',
                 'src/**/*.d.ts',
                 'src/vite-env.d.ts',
+                'src/types/**/*',
+                'src/ui/index.ts',
             ],
             thresholds: {
                 statements: 80,
