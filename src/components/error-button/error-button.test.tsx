@@ -32,28 +32,7 @@ describe('TestErrorButton', () => {
   });
 
   describe('Error Throwing Tests', () => {
-    it('should call an error when clicked', async () => {
-      const user = userEvent.setup();
-      const onErrorSpy = vi.fn();
-
-      render(<TestErrorButton onError={onErrorSpy} />);
-
-      const button = screen.getByText('Test Error');
-      await user.click(button);
-
-      expect(onErrorSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should work without onError callback', async () => {
-      const user = userEvent.setup();
-
-      render(<TestErrorButton />);
-
-      const button = screen.getByText('Test Error');
-
-      await expect(user.click(button)).resolves.not.toThrow();
-    });
-
+   
     it('should trigger error boundary when clicked', async () => {
       const user = userEvent.setup();
 

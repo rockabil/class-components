@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1778701314654" clover="3.2.0">
+  <project timestamp="1778701314655" name="All files">
+    <metrics statements="145" coveredstatements="138" conditionals="87" coveredconditionals="75" methods="33" coveredmethods="30" elements="265" coveredelements="243" complexity="0" loc="145" ncloc="145" packages="10" files="13" classes="13"/>
+    <package name="src">
+      <metrics statements="50" coveredstatements="48" conditionals="28" coveredconditionals="24" methods="6" coveredmethods="5"/>
+      <file name="App.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\App.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+      </file>
+      <file name="api.ts" path="C:\Users\admin\Documents\GitHub\class-components\src\api.ts">
+        <metrics statements="48" coveredstatements="46" conditionals="28" coveredconditionals="24" methods="5" coveredmethods="4"/>
+        <line num="3" count="3" type="stmt"/>
+        <line num="5" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="6" count="8" type="stmt"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="9" count="8" type="stmt"/>
+        <line num="10" count="8" type="stmt"/>
+        <line num="11" count="8" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
+        <line num="21" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="25" count="6" type="stmt"/>
+        <line num="26" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="30" count="5" type="stmt"/>
+        <line num="31" count="5" type="stmt"/>
+        <line num="33" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="2" type="stmt"/>
+        <line num="37" count="3" type="stmt"/>
+        <line num="38" count="3" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="42" count="7" type="stmt"/>
+        <line num="44" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="45" count="3" type="cond" truecount="1" falsecount="1"/>
+        <line num="48" count="3" type="stmt"/>
+        <line num="51" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="52" count="1" type="stmt"/>
+        <line num="55" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="56" count="1" type="stmt"/>
+        <line num="59" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="63" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="64" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="67" count="3" type="stmt"/>
+        <line num="70" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="74" count="6" type="stmt"/>
+        <line num="77" count="3" type="stmt"/>
+        <line num="78" count="4" type="stmt"/>
+        <line num="80" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="81" count="1" type="stmt"/>
+        <line num="84" count="2" type="stmt"/>
+        <line num="86" count="2" type="stmt"/>
+        <line num="87" count="3" type="stmt"/>
+        <line num="88" count="3" type="stmt"/>
+        <line num="90" count="2" type="stmt"/>
+        <line num="99" count="0" type="stmt"/>
+        <line num="102" count="1" type="stmt"/>
+        <line num="109" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.__tests__">
+      <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+      <file name="test-utils.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\__tests__\test-utils.tsx">
+        <metrics statements="4" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
+        <line num="15" count="11" type="stmt"/>
+        <line num="17" count="57" type="stmt"/>
+        <line num="20" count="11" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.app">
+      <metrics statements="38" coveredstatements="35" conditionals="19" coveredconditionals="15" methods="7" coveredmethods="6"/>
+      <file name="app.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\app\app.tsx">
+        <metrics statements="38" coveredstatements="35" conditionals="19" coveredconditionals="15" methods="7" coveredmethods="6"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="22" count="15" type="stmt"/>
+        <line num="24" count="15" type="stmt"/>
+        <line num="33" count="15" type="stmt"/>
+        <line num="35" count="13" type="stmt"/>
+        <line num="36" count="13" type="cond" truecount="4" falsecount="0"/>
+        <line num="37" count="2" type="stmt"/>
+        <line num="38" count="2" type="stmt"/>
+        <line num="42" count="15" type="stmt"/>
+        <line num="43" count="15" type="stmt"/>
+        <line num="45" count="15" type="stmt"/>
+        <line num="46" count="15" type="stmt"/>
+        <line num="47" count="11" type="stmt"/>
+        <line num="54" count="2" type="stmt"/>
+        <line num="61" count="9" type="stmt"/>
+        <line num="62" count="9" type="stmt"/>
+        <line num="63" count="9" type="stmt"/>
+        <line num="65" count="9" type="cond" truecount="2" falsecount="0"/>
+        <line num="66" count="2" type="stmt"/>
+        <line num="67" count="2" type="stmt"/>
+        <line num="68" count="2" type="stmt"/>
+        <line num="69" count="2" type="stmt"/>
+        <line num="72" count="7" type="stmt"/>
+        <line num="73" count="15" type="stmt"/>
+        <line num="76" count="7" type="stmt"/>
+        <line num="77" count="7" type="stmt"/>
+        <line num="78" count="7" type="stmt"/>
+        <line num="81" count="7" type="stmt"/>
+        <line num="82" count="7" type="stmt"/>
+        <line num="84" count="7" type="cond" truecount="3" falsecount="2"/>
+        <line num="85" count="0" type="stmt"/>
+        <line num="88" count="7" type="cond" truecount="1" falsecount="1"/>
+        <line num="89" count="0" type="stmt"/>
+        <line num="92" count="7" type="stmt"/>
+        <line num="95" count="0" type="stmt"/>
+        <line num="98" count="50" type="stmt"/>
+        <line num="99" count="50" type="cond" truecount="2" falsecount="0"/>
+        <line num="101" count="50" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.error-boundary">
+      <metrics statements="8" coveredstatements="8" conditionals="6" coveredconditionals="5" methods="4" coveredmethods="4"/>
+      <file name="error-boundary.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\error-boundary\error-boundary.tsx">
+        <metrics statements="8" coveredstatements="8" conditionals="6" coveredconditionals="5" methods="4" coveredmethods="4"/>
+        <line num="16" count="9" type="stmt"/>
+        <line num="17" count="9" type="stmt"/>
+        <line num="25" count="6" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="36" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="37" count="6" type="stmt"/>
+        <line num="57" count="8" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.error-button">
+      <metrics statements="8" coveredstatements="7" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+      <file name="index.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\error-button\index.tsx">
+        <metrics statements="8" coveredstatements="7" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <line num="14" count="19" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="27" count="56" type="cond" truecount="2" falsecount="0"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="31" count="54" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.error-message">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="error-message.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\error-message\error-message.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="9" count="5" type="stmt"/>
+        <line num="10" count="5" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.loader">
+      <metrics statements="3" coveredstatements="3" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
+      <file name="index.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\loader\index.tsx">
+        <metrics statements="3" coveredstatements="3" conditionals="4" coveredconditionals="4" methods="1" coveredmethods="1"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="18" count="23" type="stmt"/>
+        <line num="25" count="23" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.results-table">
+      <metrics statements="11" coveredstatements="11" conditionals="20" coveredconditionals="19" methods="2" coveredmethods="2"/>
+      <file name="results-table.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\results-table\results-table.tsx">
+        <metrics statements="11" coveredstatements="11" conditionals="20" coveredconditionals="19" methods="2" coveredmethods="2"/>
+        <line num="14" count="64" type="stmt"/>
+        <line num="16" count="64" type="cond" truecount="2" falsecount="0"/>
+        <line num="17" count="16" type="stmt"/>
+        <line num="20" count="48" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="3" type="stmt"/>
+        <line num="24" count="45" type="cond" truecount="2" falsecount="0"/>
+        <line num="25" count="16" type="stmt"/>
+        <line num="28" count="29" type="cond" truecount="2" falsecount="0"/>
+        <line num="29" count="5" type="stmt"/>
+        <line num="32" count="24" type="stmt"/>
+        <line num="46" count="46" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.components.search-form">
+      <metrics statements="15" coveredstatements="15" conditionals="6" coveredconditionals="5" methods="5" coveredmethods="5"/>
+      <file name="search-form.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\components\search-form\search-form.tsx">
+        <metrics statements="15" coveredstatements="15" conditionals="6" coveredconditionals="5" methods="5" coveredmethods="5"/>
+        <line num="16" count="21" type="stmt"/>
+        <line num="17" count="21" type="stmt"/>
+        <line num="22" count="55" type="stmt"/>
+        <line num="23" count="55" type="stmt"/>
+        <line num="26" count="6" type="stmt"/>
+        <line num="27" count="6" type="stmt"/>
+        <line num="28" count="6" type="stmt"/>
+        <line num="29" count="6" type="cond" truecount="1" falsecount="1"/>
+        <line num="30" count="6" type="stmt"/>
+        <line num="34" count="3" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
+        <line num="36" count="3" type="stmt"/>
+        <line num="40" count="112" type="stmt"/>
+        <line num="41" count="112" type="stmt"/>
+        <line num="43" count="112" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.ui">
+      <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+      <file name="footer.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\ui\footer.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+      </file>
+      <file name="header.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\ui\header.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="4" count="2" type="stmt"/>
+      </file>
+      <file name="main.tsx" path="C:\Users\admin\Documents\GitHub\class-components\src\ui\main.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

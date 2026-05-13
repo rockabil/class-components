@@ -3,7 +3,7 @@ import { Component } from "react";
 import { type SearchResult } from "../../types/types";
 import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
-import { TestErrorButton } from "../test-error-button/index"
+import { TestErrorButton } from "../error-button/index"
 import { Loader } from "../loader";
 import { loadAllCharactersWithDetails } from "../../api";
 import './module.css';
@@ -65,6 +65,7 @@ export class App extends Component<object, AppState> {
         if (!trimmedQuery) {            
             this.setState({ filteredResults: allResults });
             localStorage.removeItem(STORAGE_KEY);
+            this.lastSearchQuery = '';
             return;
         }        
         
@@ -74,6 +75,7 @@ export class App extends Component<object, AppState> {
         
         this.setState({ filteredResults: filtered });
         localStorage.setItem(STORAGE_KEY, trimmedQuery);
+        this.lastSearchQuery = trimmedQuery;
     };
 
     handleSearch = (searchQuery: string) => {

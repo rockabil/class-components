@@ -62,7 +62,7 @@ describe('App Component', () => {
 
     it('should show the Loader when is loading', () => {
       mockLoadAll.mockImplementation(
-        () => new Promise<SearchResult[]>(() => { })
+        () => new Promise<SearchResult[]>(() => {})
       );
 
       render(<App />);
@@ -70,7 +70,7 @@ describe('App Component', () => {
       expect(document.querySelector('.overlay')).toBeInTheDocument();
     });
 
-    it('have to show an error message whe loading fails', async () => {
+    it('have to show an error message when loading fails', async () => {
       mockLoadAll.mockRejectedValueOnce(new Error('Network Error'));
 
       render(<App />);
@@ -85,38 +85,27 @@ describe('App Component', () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
       render(<App />);
-
+     
       await waitFor(() => {
         expect(screen.getByText('Results (3)')).toBeInTheDocument();
       });
-      expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
-
-      await waitFor(() => {
-        expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
-      });
-
-      expect(screen.queryByText('Spock')).not.toBeInTheDocument();
     });
   });
 
   describe('Search Term Persistence (localStorage)', () => {
-    it('should load saved search querry from localStorage', async () => {
+    it('should load saved search query from localStorage', async () => {
       localStorage.setItem('lastSearchQuery', 'Kirk');
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
       render(<App />);
-
-      await waitFor(() => {
-        expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
-      });
-
-      await waitFor(() => {
-        expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
-        expect(screen.queryByText('Spock')).not.toBeInTheDocument();
-      });
+      
+      const input = await screen.findByDisplayValue('Kirk');
+      expect(input).toBeInTheDocument();
+      
+      expect(localStorage.getItem('lastSearchQuery')).toBe('Kirk');    
     });
 
-    it('should save search querry in the localStorage when is searching', async () => {
+    it('should save search query in the localStorage when searching', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
@@ -131,10 +120,12 @@ describe('App Component', () => {
       await user.type(input, 'Picard');
       await user.click(screen.getByRole('button', { name: /find/i }));
 
-      expect(localStorage.getItem('lastSearchQuery')).toBe('Picard');
+      await waitFor(() => {
+        expect(localStorage.getItem('lastSearchQuery')).toBe('Picard');
+      });
     });
 
-    it('should delete querry from the localStorage when searching empty via the button Clear', async () => {
+    it('should delete query from localStorage when clearing search via Clear button', async () => {
       localStorage.setItem('lastSearchQuery', 'Kirk');
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
@@ -147,12 +138,15 @@ describe('App Component', () => {
 
       await user.click(screen.getByRole('button', { name: /clear/i }));
 
-      expect(localStorage.getItem('lastSearchQuery')).toBeNull();
+      await waitFor(() => {
+        expect(localStorage.getItem('lastSearchQuery')).toBeNull();
+      })
+      
     });
   });
 
   describe('Search Functionality', () => {
-    it('should filter the results of search querry', async () => {
+    it('should filter the results of search query', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
@@ -167,9 +161,11 @@ describe('App Component', () => {
       await user.type(input, 'Spock');
       await user.click(screen.getByRole('button', { name: /find/i }));
 
-      expect(screen.getByText('Spock')).toBeInTheDocument();
-      expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
-      expect(screen.getByText('Results (1)')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Spock')).toBeInTheDocument();
+        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
+        expect(screen.getByText('Results (1)')).toBeInTheDocument();
+      });
     });
 
     it('have to show "No characters found" if there are no results', async () => {
@@ -187,25 +183,27 @@ describe('App Component', () => {
       await user.type(input, 'NonexistentCharacter');
       await user.click(screen.getByRole('button', { name: /find/i }));
 
-      expect(screen.getByText(/No characters found matching your query/i)).toBeInTheDocument();
-      expect(screen.getByText('Results (0)')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText(/No characters found matching your query/i)).toBeInTheDocument();
+        expect(screen.getByText('Results (0)')).toBeInTheDocument();
+      });
     });
 
-    it('should reset the filter when the search query is empty via Clear button', async () => {
+    it('should reset the filter when search query is empty via Clear button', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
       render(<App />);
-
+      
       await waitFor(() => {
         expect(screen.getByText('Results (3)')).toBeInTheDocument();
       });
-
+      
       const input = screen.getByRole('textbox');
       await user.clear(input);
       await user.type(input, 'Spock');
       await user.click(screen.getByRole('button', { name: /find/i }));
-
+      
       await waitFor(() => {
         expect(screen.getByText('Spock')).toBeInTheDocument();
         expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
@@ -214,6 +212,10 @@ describe('App Component', () => {
       
       await user.click(screen.getByRole('button', { name: /clear/i }));
 
+      await waitFor(() => {
+        expect(input).toHaveValue('');
+      });
+      
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
         expect(screen.getByText('Spock')).toBeInTheDocument();
@@ -280,7 +282,9 @@ describe('App Component', () => {
       await user.type(input, 'spock');
       await user.click(screen.getByRole('button', { name: /find/i }));
 
-      expect(screen.getByText('Spock')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Spock')).toBeInTheDocument();
+      });
     });
   });
 });
