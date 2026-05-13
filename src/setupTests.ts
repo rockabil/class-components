@@ -19,6 +19,11 @@ const localStorageMock = (() => {
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
+Object.defineProperty(window, 'location', {
+  value: { reload: vi.fn() },
+  writable: true,
+});
+
 beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
