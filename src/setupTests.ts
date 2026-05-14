@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import { afterEach, beforeEach, vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 
 afterEach(() => {
   cleanup();
@@ -22,8 +22,4 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 Object.defineProperty(window, 'location', {
   value: { reload: vi.fn() },
   writable: true,
-});
-
-beforeEach(() => {
-  vi.spyOn(console, 'error').mockImplementation(() => {});
 });
