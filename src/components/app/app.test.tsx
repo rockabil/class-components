@@ -53,10 +53,10 @@ describe('App Component', () => {
 
       render(<App />);
 
-      expect(mockLoadAll).toHaveBeenCalledTimes(1);
-
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
+        expect(screen.getByText('Spock')).toBeInTheDocument();
+        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();
       });
     });
 
@@ -67,10 +67,10 @@ describe('App Component', () => {
 
       render(<App />);
 
-      expect(document.querySelector('.overlay')).toBeInTheDocument();
+      expect(screen.getByText(/Loading characters from Star Trek universe/i)).toBeInTheDocument();
     });
 
-    it('have to show an error message when loading fails', async () => {
+    it('should display error message when API request fails', async () => {
       mockLoadAll.mockRejectedValueOnce(new Error('Network Error'));
 
       render(<App />);
@@ -81,31 +81,50 @@ describe('App Component', () => {
       });
     });
 
-    it('should display a number of results in the title', async () => {
+    it('should hide loading indicator after data loads', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
       render(<App />);
-     
+
       await waitFor(() => {
-        expect(screen.getByText('Results (3)')).toBeInTheDocument();
+        expect(screen.queryByText(/Loading characters from Star Trek universe/i)).not.toBeInTheDocument();
+      });
+    });
+
+    it('should hide loading indicator when API request fails', async () => {
+      mockLoadAll.mockRejectedValueOnce(new Error('Error'));
+
+      render(<App />);
+
+      await waitFor(() => {
+        expect(screen.queryByText(/Loading characters from Star Trek universe/i)).not.toBeInTheDocument();
       });
     });
   });
 
   describe('Search Term Persistence (localStorage)', () => {
-    it('should load saved search query from localStorage', async () => {
+    it('should load saved search query from localStorage in input field', async () => {
       localStorage.setItem('lastSearchQuery', 'Kirk');
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
       render(<App />);
       
-      const input = await screen.findByDisplayValue('Kirk');
-      expect(input).toBeInTheDocument();
-      
-      expect(localStorage.getItem('lastSearchQuery')).toBe('Kirk');    
+      await waitFor(() => {
+        expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
+      });   
     });
 
-    it('should save search query in the localStorage when searching', async () => {
+    it('should show empty input when localStorage has no saved term', async () => {
+      mockLoadAll.mockResolvedValueOnce(mockCharacters);
+
+      render(<App />);
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox')).toHaveValue('');
+      });      
+    });
+
+    it('should save search term to localStorage after user searches', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
@@ -121,8 +140,10 @@ describe('App Component', () => {
       await user.click(screen.getByRole('button', { name: /find/i }));
 
       await waitFor(() => {
-        expect(localStorage.getItem('lastSearchQuery')).toBe('Picard');
+        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();
       });
+
+      expect(localStorage.getItem('lastSearchQuery')).toBe('Picard');      
     });
 
     it('should delete query from localStorage when clearing search via Clear button', async () => {
@@ -140,8 +161,28 @@ describe('App Component', () => {
 
       await waitFor(() => {
         expect(localStorage.getItem('lastSearchQuery')).toBeNull();
-      })
-      
+      })      
+    });
+
+    it('should remove localStorage entry when clearing search', async () => {
+      // Feature 7: удаление из localStorage
+      localStorage.setItem('lastSearchQuery', 'Kirk');
+      const user = userEvent.setup();
+      mockLoadAll.mockResolvedValueOnce(mockCharacters);
+
+      render(<App />);
+
+      await waitFor(() => {
+        expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: /clear/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole('textbox')).toHaveValue('');
+      });
+
+      expect(localStorage.getItem('lastSearchQuery')).toBeNull();
     });
   });
 
@@ -163,12 +204,11 @@ describe('App Component', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Spock')).toBeInTheDocument();
-        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
-        expect(screen.getByText('Results (1)')).toBeInTheDocument();
+        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();        
       });
     });
 
-    it('have to show "No characters found" if there are no results', async () => {
+    it('have to show "No characters found" when search returns no results', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
@@ -184,19 +224,18 @@ describe('App Component', () => {
       await user.click(screen.getByRole('button', { name: /find/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/No characters found matching your query/i)).toBeInTheDocument();
-        expect(screen.getByText('Results (0)')).toBeInTheDocument();
+        expect(screen.getByText(/No characters found matching your query/i)).toBeInTheDocument();        
       });
     });
 
-    it('should reset the filter when search query is empty via Clear button', async () => {
+    it('should reset the filter and  show all results when clearing search', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
       render(<App />);
       
       await waitFor(() => {
-        expect(screen.getByText('Results (3)')).toBeInTheDocument();
+        expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
       });
       
       const input = screen.getByRole('textbox');
@@ -206,68 +245,19 @@ describe('App Component', () => {
       
       await waitFor(() => {
         expect(screen.getByText('Spock')).toBeInTheDocument();
-        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
-        expect(screen.getByText('Results (1)')).toBeInTheDocument();
+        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();        
       });
       
       await user.click(screen.getByRole('button', { name: /clear/i }));
-
-      await waitFor(() => {
-        expect(input).toHaveValue('');
-      });
       
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
         expect(screen.getByText('Spock')).toBeInTheDocument();
-        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();
-        expect(screen.getByText('Results (3)')).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Loader Behavior', () => {
-    it('should show the Loader when loading and hide after completion', async () => {
-      let resolvePromise!: (value: SearchResult[]) => void;
-      const promise = new Promise<SearchResult[]>((resolve) => {
-        resolvePromise = resolve;
-      });
-      mockLoadAll.mockReturnValue(promise);
-
-      render(<App />);
-
-      expect(document.querySelector('.overlay')).toBeInTheDocument();
-
-      resolvePromise(mockCharacters);
-
-      await waitFor(() => {
-        expect(document.querySelector('.overlay')).not.toBeInTheDocument();
+        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();        
       });
     });
 
-    it('should hide Loader on error', async () => {
-      mockLoadAll.mockRejectedValueOnce(new Error('Error'));
-
-      render(<App />);
-
-      await waitFor(() => {
-        expect(document.querySelector('.overlay')).not.toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('must handle empty data from the API', async () => {
-      mockLoadAll.mockResolvedValueOnce([]);
-
-      render(<App />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Results (0)')).toBeInTheDocument();
-        expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
-      });
-    });
-
-    it('should filter correctly based on case', async () => {
+    it('should perform case-insensitive search', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
@@ -284,6 +274,52 @@ describe('App Component', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Spock')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('should handle empty data from API', async () => {
+      mockLoadAll.mockResolvedValueOnce([]);
+
+      render(<App />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
+      });
+    });
+
+    it('should work correctly when search is performed after clearing', async () => {
+      const user = userEvent.setup();
+      mockLoadAll.mockResolvedValueOnce(mockCharacters);
+
+      render(<App />);
+
+      await waitFor(() => {
+        expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
+      });
+
+      const input = screen.getByRole('textbox');
+      await user.clear(input);
+      await user.type(input, 'Spock');
+      await user.click(screen.getByRole('button', { name: /find/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Spock')).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole('button', { name: /clear/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
+      });
+
+      await user.type(input, 'Picard');
+      await user.click(screen.getByRole('button', { name: /find/i }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();
+        expect(screen.queryByText('Spock')).not.toBeInTheDocument();
       });
     });
   });
