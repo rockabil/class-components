@@ -1,0 +1,26 @@
+.app-header {
+  background-color: var(--background-color);
+  padding: 1rem;
+  color: var(--text-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-main {
+  flex: 1;
+  padding: 20px;
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+}
+
+.app-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+}
