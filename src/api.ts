@@ -2,7 +2,7 @@ import type { SearchResult, StapiCharacter } from "./types/types";
 
 const STAPI_BASE_URL = 'https://stapi.co/api/v1/rest';
 
-const searchCharacters = async (name: string, pageNumber = 0, pageSize = 50): Promise<StapiCharacter[]> => {
+export const searchCharacters = async (name: string, pageNumber = 0, pageSize = 50): Promise<StapiCharacter[]> => {
     const url = `${STAPI_BASE_URL}/character/search`;
 
     const formData = new URLSearchParams();
@@ -26,7 +26,7 @@ const searchCharacters = async (name: string, pageNumber = 0, pageSize = 50): Pr
     return data.characters || [];
 };
 
-const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter> => {
+export const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter> => {
     const url = `${STAPI_BASE_URL}/character/${uid}`;
     const response = await fetch(url);
 
@@ -38,7 +38,7 @@ const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter> => {
     return data.character;
 };
 
-const generateDescription = (character: StapiCharacter): string => {
+export const generateDescription = (character: StapiCharacter): string => {
     const details: string[] = [];
     
     if (character.gender) {
