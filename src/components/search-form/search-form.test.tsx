@@ -36,7 +36,7 @@ describe('SearchForm', () => {
       render(<SearchForm onSearch={mockOnSearch} loading={true} />);
 
       expect(screen.getByRole('textbox')).toBeDisabled();
-      expect(screen.getByRole('button', { name: /search\.\.\./i })).toBeDisabled();
+      expect(screen.getByRole('button', { name: /searching/i })).toBeDisabled();
     });
   });
 

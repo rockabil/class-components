@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '../__tests__/test-utils';
+import { renderWithRouter, screen, waitFor } from '../__tests__/test-utils';
 import userEvent from '@testing-library/user-event';
 import { SearchView } from './search-view';
 import * as api from '../../api';
@@ -51,7 +51,7 @@ describe('App Component', () => {
     it('should load data when component is mounted', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('App Component', () => {
         () => new Promise<SearchResult[]>(() => { })
       );
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       expect(screen.getByText(/Loading characters from Star Trek universe/i)).toBeInTheDocument();
     });
@@ -73,7 +73,7 @@ describe('App Component', () => {
     it('should display error message when API request fails', async () => {
       mockLoadAll.mockRejectedValueOnce(new Error('Network Error'));
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText(/Error:/i)).toBeInTheDocument();
@@ -84,7 +84,7 @@ describe('App Component', () => {
     it('should hide loading indicator after data loads', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.queryByText(/Loading characters from Star Trek universe/i)).not.toBeInTheDocument();
@@ -94,7 +94,7 @@ describe('App Component', () => {
     it('should hide loading indicator when API request fails', async () => {
       mockLoadAll.mockRejectedValueOnce(new Error('Error'));
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.queryByText(/Loading characters from Star Trek universe/i)).not.toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('App Component', () => {
       localStorage.setItem('lastSearchQuery', 'Kirk');
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe('App Component', () => {
     it('should show empty input when localStorage has no saved term', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByRole('textbox')).toHaveValue('');
@@ -128,7 +128,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -151,7 +151,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -212,7 +212,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -232,7 +232,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -261,7 +261,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -282,10 +282,10 @@ describe('App Component', () => {
     it('should handle empty data from API', async () => {
       mockLoadAll.mockResolvedValueOnce([]);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
-        expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
+        expect(screen.getByText(/Enter your query and click "Find"/i)).toBeInTheDocument();
       });
     });
 
@@ -293,7 +293,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<SearchView />);
+      renderWithRouter(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
