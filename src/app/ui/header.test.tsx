@@ -8,7 +8,7 @@ describe('Header', () => {
     render(<BrowserRouter>
         <Header />
       </BrowserRouter>);
-    expect(screen.getByText('Search App')).toBeInTheDocument();
+    expect(screen.getByText('STAR TREK Heroes Search')).toBeInTheDocument();
     expect(screen.getByText('Home')).toBeInTheDocument();
     expect(screen.getByText('About Us')).toBeInTheDocument();
   });
