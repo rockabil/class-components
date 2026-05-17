@@ -22,7 +22,7 @@ export const usePagination = ({ totalItems, itemsPerPage }: UsePaginationProps) 
     })();
     
     const [currentPage, setCurrentPage] = useState(initialPage);
-    const totalPages = Math.ceil(totalItems / itemsPerPage);    
+    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));    
     
     const updateUrl = (page: number) => {
         if (page === 1) {
@@ -34,9 +34,11 @@ export const usePagination = ({ totalItems, itemsPerPage }: UsePaginationProps) 
     };
     
     const goToPage = (page: number) => {
-        if (page < 1 || page > totalPages) return;
-        setCurrentPage(page);
-        updateUrl(page);
+        const validPage = Math.max(1, Math.min(page, totalPages));
+        if (validPage === currentPage) return;
+
+        setCurrentPage(validPage);
+        updateUrl(validPage);
     };
     
     const nextPage = () => {
