@@ -1,4 +1,4 @@
-// src/components/app/app.tsx
+
 import { Component } from "react";
 import { type SearchResult } from "../../types/types";
 import { SearchForm } from "../search-form/search-form";
