@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '../__tests__/test-utils';
 import userEvent from '@testing-library/user-event';
-import { App } from './app';
+import { SearchView } from './search-view';
 import * as api from '../../api';
 import type { SearchResult } from '../../types/types';
 
@@ -51,7 +51,7 @@ describe('App Component', () => {
     it('should load data when component is mounted', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -62,10 +62,10 @@ describe('App Component', () => {
 
     it('should show the Loader when is loading', () => {
       mockLoadAll.mockImplementation(
-        () => new Promise<SearchResult[]>(() => {})
+        () => new Promise<SearchResult[]>(() => { })
       );
 
-      render(<App />);
+      render(<SearchView />);
 
       expect(screen.getByText(/Loading characters from Star Trek universe/i)).toBeInTheDocument();
     });
@@ -73,7 +73,7 @@ describe('App Component', () => {
     it('should display error message when API request fails', async () => {
       mockLoadAll.mockRejectedValueOnce(new Error('Network Error'));
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText(/Error:/i)).toBeInTheDocument();
@@ -84,7 +84,7 @@ describe('App Component', () => {
     it('should hide loading indicator after data loads', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.queryByText(/Loading characters from Star Trek universe/i)).not.toBeInTheDocument();
@@ -94,7 +94,7 @@ describe('App Component', () => {
     it('should hide loading indicator when API request fails', async () => {
       mockLoadAll.mockRejectedValueOnce(new Error('Error'));
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.queryByText(/Loading characters from Star Trek universe/i)).not.toBeInTheDocument();
@@ -107,28 +107,28 @@ describe('App Component', () => {
       localStorage.setItem('lastSearchQuery', 'Kirk');
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
-      
+      render(<SearchView />);
+
       await waitFor(() => {
         expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
-      });   
+      });
     });
 
     it('should show empty input when localStorage has no saved term', async () => {
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByRole('textbox')).toHaveValue('');
-      });      
+      });
     });
 
     it('should save search term to localStorage after user searches', async () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -143,7 +143,7 @@ describe('App Component', () => {
         expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();
       });
 
-      expect(localStorage.getItem('lastSearchQuery')).toBe('Picard');      
+      expect(localStorage.getItem('lastSearchQuery')).toBe('Picard');
     });
 
     it('should delete query from localStorage when clearing search via Clear button', async () => {
@@ -151,7 +151,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
@@ -161,7 +161,7 @@ describe('App Component', () => {
 
       await waitFor(() => {
         expect(localStorage.getItem('lastSearchQuery')).toBeNull();
-      })      
+      })
     });
 
     it('should remove localStorage entry when clearing search', async () => {
@@ -170,7 +170,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByDisplayValue('Kirk')).toBeInTheDocument();
@@ -191,7 +191,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -204,7 +204,7 @@ describe('App Component', () => {
 
       await waitFor(() => {
         expect(screen.getByText('Spock')).toBeInTheDocument();
-        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();        
+        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
       });
     });
 
@@ -212,7 +212,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -224,7 +224,7 @@ describe('App Component', () => {
       await user.click(screen.getByRole('button', { name: /find/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/No characters found matching your query/i)).toBeInTheDocument();        
+        expect(screen.getByText(/No characters found matching your query/i)).toBeInTheDocument();
       });
     });
 
@@ -232,28 +232,28 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
-      
+      render(<SearchView />);
+
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
       });
-      
+
       const input = screen.getByRole('textbox');
       await user.clear(input);
       await user.type(input, 'Spock');
       await user.click(screen.getByRole('button', { name: /find/i }));
-      
+
       await waitFor(() => {
         expect(screen.getByText('Spock')).toBeInTheDocument();
-        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();        
+        expect(screen.queryByText('James T. Kirk')).not.toBeInTheDocument();
       });
-      
+
       await user.click(screen.getByRole('button', { name: /clear/i }));
-      
+
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
         expect(screen.getByText('Spock')).toBeInTheDocument();
-        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();        
+        expect(screen.getByText('Jean-Luc Picard')).toBeInTheDocument();
       });
     });
 
@@ -261,7 +261,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
@@ -282,7 +282,7 @@ describe('App Component', () => {
     it('should handle empty data from API', async () => {
       mockLoadAll.mockResolvedValueOnce([]);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText(/No characters found/i)).toBeInTheDocument();
@@ -293,7 +293,7 @@ describe('App Component', () => {
       const user = userEvent.setup();
       mockLoadAll.mockResolvedValueOnce(mockCharacters);
 
-      render(<App />);
+      render(<SearchView />);
 
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();

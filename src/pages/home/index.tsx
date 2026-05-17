@@ -1,7 +1,7 @@
-import { App } from '../../components/app/app';
+import { SearchView } from '../../components/search-view/search-view';
 
 export const HomePage = () => {
     return (
-        <App />
+        <SearchView />
     )
 }
