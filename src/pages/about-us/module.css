@@ -1,0 +1,187 @@
+.about-us-page {
+  width: 100%;
+}
+
+.about-us-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.about-hero {
+  background: var(--code-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.about-hero h1 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.about-tagline {
+  color: var(--text-h);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.about-description {
+  background: var(--code-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.about-description h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.about-description p {
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  color: var(--text-h);
+}
+
+.about-description p:last-child {
+  margin-bottom: 0;
+}
+
+.about-author {
+  background: var(--code-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.about-author h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.author-info h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+
+.author-info p {
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  color: var(--text-h);
+}
+
+.author-info ul {
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+  color: var(--text-h);
+}
+
+.author-info li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.author-links {
+  margin-top: 1rem;
+}
+
+.author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--text-h);
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.author-link:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.about-rs-school {
+  background: var(--code-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.about-rs-school h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.rs-school-content p {
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+  color: var(--text-h);
+}
+
+.rs-school-content p:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+.rs-school-content strong {
+  color: var(--accent);
+}
+
+.rs-school-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--text-h);
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.rs-school-button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.button-arrow {
+  transition: transform 0.2s;
+}
+
+.rs-school-button:hover .button-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .about-us-container {
+    padding: 1rem;
+  }
+  
+  .author-info ul {
+    padding-left: 1rem;
+  }
+}
