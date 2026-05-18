@@ -78,7 +78,7 @@ export const loadAllCharactersWithDetails = async (): Promise<SearchResult[]> =>
     const characters = await searchCharacters('q', 0, 100);
 
     if (!characters.length) {
-        throw new Error ('No characters found');
+        throw new Error('No characters found');
     }
 
     const results: SearchResult[] = [];
@@ -98,7 +98,8 @@ export const loadAllCharactersWithDetails = async (): Promise<SearchResult[]> =>
                 species: details.species?.name,
                 organizations: details.organizations?.map(org => org.name),
             });
-        } catch {
+        } catch (error) {
+            console.warn(`Failed to fetch details for ${char.name}:`, error);
             results.push({
                 id: char.uid,
                 name: char.name,
@@ -107,4 +108,4 @@ export const loadAllCharactersWithDetails = async (): Promise<SearchResult[]> =>
         }
     }
     return results;
-}
+};

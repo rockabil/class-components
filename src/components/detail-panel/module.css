@@ -1,0 +1,136 @@
+/* src/components/detail-panel/detail-panel.css */
+.detail-panel {
+    background: var(--code-bg);
+    border-left: 1px solid var(--border);
+    padding: 1.5rem;
+    width: 400px;
+    overflow-y: auto;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 100px);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.detail-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-panel-header h2 {
+    margin: 0;
+    color: var(--accent);
+    font-size: 1.25rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.close-button:hover {
+    background: var(--border);
+    color: var(--accent);
+}
+
+.detail-content h3 {
+    color: var(--accent);
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+}
+
+.detail-field {
+    margin-bottom: 1rem;
+}
+
+.detail-field strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--accent);
+}
+
+.detail-field p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.detail-field ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.detail-field li {
+    margin-bottom: 0.25rem;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.status-alive {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+}
+
+.status-deceased {
+    background: rgba(244, 67, 54, 0.2);
+    color: #f44336;
+}
+
+.detail-error {
+    color: var(--error-text-color);
+    padding: 1rem;
+    background: var(--error-bg-color);
+    border-radius: 8px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .detail-panel {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        z-index: 1000;
+        animation: slideInMobile 0.3s ease;
+    }
+    
+    @keyframes slideInMobile {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+}

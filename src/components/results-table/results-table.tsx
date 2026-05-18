@@ -6,9 +6,12 @@ interface ResultsTableProps {
     loading: boolean;
     error: string | null;
     hasSearched: boolean;
+    onSelectCharacter?: (id: string) => void;
+    selectedCharacterId?: string | null;
 }
 
-export const ResultsTable = ({ results, loading, error, hasSearched }: ResultsTableProps) => {
+export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCharacter,
+    selectedCharacterId }: ResultsTableProps) => {
     {        
         if (loading) {
             return <div className="loading">Loading characters from Star Trek universe...</div>
@@ -41,7 +44,9 @@ export const ResultsTable = ({ results, loading, error, hasSearched }: ResultsTa
                 </thead>
                 <tbody>
                     {results.map((item) => (
-                        <tr key={item.id}>
+                        <tr key={item.id} onClick={() => onSelectCharacter?.(item.id)}
+                            className={`results-row ${selectedCharacterId === item.id ? 'selected' : ''}`}>
+                            
                             <td>{item.name}</td>
                             <td>{item.gender === 'M' ? '♂ Male' : item.gender === 'F' ? '♀ Female' : item.gender || '—'}</td>
                             <td>
