@@ -6,7 +6,7 @@
   padding: 1.5rem;
   width: 100%;
   background-color: var(--main-bg-color);
-  color: var(--main-text-color);
+  color: var(--text-h);
   box-sizing: border-box;
 }
 
