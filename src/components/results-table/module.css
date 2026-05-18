@@ -41,6 +41,20 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.results-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.results-row:hover {
+    background-color: var(--table-bg-color);
+}
+
+.results-row.selected {
+    background-color: rgba(131, 127, 240, 0.2);
+    border-left: 3px solid var(--accent);
+}
+
 @media (max-width: 768px) {
   .results-table th,
   .results-table td {

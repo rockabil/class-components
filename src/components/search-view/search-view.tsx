@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { type SearchResult } from "../../types/types";
 import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
 import { Pagination } from "../pagination/pagination";
+import { DetailPanel } from "../detail-panel/detail-panel";
 import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
 import { loadAllCharactersWithDetails } from "../../api";
@@ -18,7 +20,10 @@ export const SearchView = () => {
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState(() => {
         return localStorage.getItem(STORAGE_KEY) || '';
-    });    
+    });
+    
+    const [searchParams, setSearchParams] = useSearchParams();
+    const selectedCharacterId = searchParams.get('details');
     
     const filteredResults = useMemo(() => {
         if (allResults.length === 0) return [];
@@ -92,6 +97,18 @@ export const SearchView = () => {
     const handleSearch = useCallback((query: string) => {
         setSearchQuery(query.trim());
     }, []);
+    
+    const handleSelectCharacter = useCallback((id: string) => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('details', id);
+        setSearchParams(newParams, { replace: true });
+    }, [searchParams, setSearchParams]);
+    
+    const handleCloseDetails = useCallback(() => {
+        const newParams = new URLSearchParams(searchParams);
+        newParams.delete('details');
+        setSearchParams(newParams, { replace: true });
+    }, [searchParams, setSearchParams]);
 
     const paginatedResults = getCurrentPageItems(filteredResults);    
 
@@ -99,36 +116,45 @@ export const SearchView = () => {
         <div className="search-view">
             {loading && <Loader size={60} speed={0.8} thickness={3} />}
             
-            <div className="app-container">
-                <section className="search-section">
-                    <h2>Search</h2>
-                    <SearchForm 
-                        onSearch={handleSearch} 
-                        loading={loading} 
-                        initialQuery={searchQuery}
-                    />
-                </section>
-                
-                <section className="results-section">
-                    <h2>Results ({filteredResults.length})</h2>
-                    <ResultsTable 
-                        results={paginatedResults} 
-                        loading={loading} 
-                        error={error} 
-                        hasSearched={!loading && allResults.length > 0}
-                    />
-                    
-                    {!loading && !error && (
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={goToPage}
-                            disabled={loading}
+            <div className={`app-container ${selectedCharacterId ? 'with-details' : ''}`}>
+                <div className="results-wrapper">
+                    <div className="search-section">
+                        <h2>Search</h2>
+                        <SearchForm 
+                            onSearch={handleSearch} 
+                            loading={loading} 
+                            initialQuery={searchQuery}
                         />
-                    )}
-
-                    <TestErrorButton />
-                </section>
+                    </div>
+                    
+                    <div className="results-section">
+                        <h2>Results ({filteredResults.length})</h2>
+                        <ResultsTable 
+                            results={paginatedResults} 
+                            loading={loading} 
+                            error={error} 
+                            hasSearched={!loading && allResults.length > 0}
+                            onSelectCharacter={handleSelectCharacter}
+                            selectedCharacterId={selectedCharacterId}
+                        />
+                        
+                        {!loading && !error && (
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={goToPage}
+                                disabled={loading}
+                            />
+                        )}
+                        
+                        <TestErrorButton />
+                    </div>
+                </div>
+                
+                <DetailPanel 
+                    characterId={selectedCharacterId}
+                    onClose={handleCloseDetails}
+                />
             </div>
         </div>
     );    
