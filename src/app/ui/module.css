@@ -1,5 +1,5 @@
 .app-header {
-  background-color: linear-gradient(135deg, var(--code-bg) 0%, var(--bg) 100%);
+  background: linear-gradient(135deg, var(--code-bg) 0%, var(--bg) 100%);
   padding: 1rem 2rem;
   color: var(--text-h);
   display: flex;

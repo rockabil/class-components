@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
 :root {
   --background-color: #312834;
   --text-color: white;
@@ -15,6 +17,7 @@
   --error-border-color: #921818;
   --error-border-shadow: rgba(220, 38, 38, 0.3);
   --table-bg-color: rgba(255, 255, 255, 0.05);
+  --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 #root {

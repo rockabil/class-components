@@ -4,6 +4,7 @@ import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
 import { Pagination } from "../pagination/pagination";
 import { Loader } from "../loader";
+import { TestErrorButton } from "../error-button";
 import { loadAllCharactersWithDetails } from "../../api";
 import { usePagination } from '../../hooks';
 import './module.css';
@@ -125,6 +126,8 @@ export const SearchView = () => {
                             disabled={loading}
                         />
                     )}
+
+                    <TestErrorButton />
                 </section>
             </div>
         </div>
