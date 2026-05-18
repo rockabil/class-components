@@ -5,16 +5,18 @@
     padding: 0.5rem 1rem;
     background-color: var(--error-bg-color);
     color: var(--error-text-color);
-    border: var(--error-border-color);
+    border: 1px solid var(--error-border-color);
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
     transition: all 0.2s ease;
+    margin-top: 1rem;
 }
 
 .test-error-button:hover {
     background-color: var(--error-border-color);
+    color: white;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px var(--error-border-shadow);
 }
@@ -25,4 +27,5 @@
 
 .test-error-icon {
     font-size: 1rem;
+    font-weight: bold;
 }
