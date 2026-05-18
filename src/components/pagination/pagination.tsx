@@ -47,7 +47,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange, disabled = f
                 className="pagination-button"
                 aria-label="Previous page"
             >
-                ← Previous
+                Previous
             </button>
             
             <div className="pagination-pages">
@@ -74,7 +74,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange, disabled = f
                 className="pagination-button"
                 aria-label="Next page"
             >
-                Next →
+                Next
             </button>
         </nav>
     );

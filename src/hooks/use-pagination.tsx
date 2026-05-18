@@ -1,5 +1,4 @@
-// src/hooks/usePagination.ts
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 interface UsePaginationProps {
@@ -8,8 +7,8 @@ interface UsePaginationProps {
 }
 
 export const usePagination = ({ totalItems, itemsPerPage }: UsePaginationProps) => {
-    const [searchParams, setSearchParams] = useSearchParams();
-       
+    const [searchParams, setSearchParams] = useSearchParams();    
+   
     const initialPage = (() => {
         const pageFromUrl = searchParams.get('page');
         if (pageFromUrl) {
@@ -23,52 +22,53 @@ export const usePagination = ({ totalItems, itemsPerPage }: UsePaginationProps) 
     
     const [currentPage, setCurrentPage] = useState(initialPage);
     const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));    
-    
-    const updateUrl = (page: number) => {
+   
+    const updateUrl = useCallback((page: number) => {
+        const newParams = new URLSearchParams(searchParams);
         if (page === 1) {
-            searchParams.delete('page');
+            newParams.delete('page');
         } else {
-            searchParams.set('page', page.toString());
+            newParams.set('page', page.toString());
         }
-        setSearchParams(searchParams);
-    };
+        setSearchParams(newParams, { replace: true });
+    }, [searchParams, setSearchParams]);
     
-    const goToPage = (page: number) => {
+    const goToPage = useCallback((page: number) => {
         const validPage = Math.max(1, Math.min(page, totalPages));
         if (validPage === currentPage) return;
-
+        
         setCurrentPage(validPage);
         updateUrl(validPage);
-    };
+    }, [currentPage, totalPages, updateUrl]);
     
-    const nextPage = () => {
+    const nextPage = useCallback(() => {
         if (currentPage < totalPages) {
             const newPage = currentPage + 1;
             setCurrentPage(newPage);
             updateUrl(newPage);
         }
-    };
+    }, [currentPage, totalPages, updateUrl]);
     
-    const prevPage = () => {
+    const prevPage = useCallback(() => {
         if (currentPage > 1) {
             const newPage = currentPage - 1;
             setCurrentPage(newPage);
             updateUrl(newPage);
         }
-    };
+    }, [currentPage, updateUrl]);
     
-    const resetPage = () => {
+    const resetPage = useCallback(() => {
         if (currentPage !== 1) {
             setCurrentPage(1);
             updateUrl(1);
         }
-    };
-        
-    const getCurrentPageItems = <T,>(items: T[]): T[] => {
+    }, [currentPage, updateUrl]);
+    
+    const getCurrentPageItems = useCallback(<T,>(items: T[]): T[] => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return items.slice(startIndex, endIndex);
-    };
+    }, [currentPage, itemsPerPage]);
     
     return {
         currentPage,
