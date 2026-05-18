@@ -1,1 +1,1 @@
-export { usePagination } from './use-pagination';
+export { usePagination } from './use-pagination'

@@ -92,7 +92,7 @@ export const SearchView = () => {
         setSearchQuery(query.trim());
     }, []);
 
-    const paginatedResults = getCurrentPageItems(filteredResults);
+    const paginatedResults = getCurrentPageItems(filteredResults);    
 
     return (
         <div className="search-view">
