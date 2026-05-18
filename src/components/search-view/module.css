@@ -5,10 +5,12 @@
   gap: 2rem;
   padding: 1.5rem;
   width: 100%;
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
   box-sizing: border-box;
 }
 
-search-section {
+.search-section {
   background: var(--code-bg);
   padding: 1.5rem;
   border-radius: 12px;
@@ -23,5 +25,13 @@ search-section {
   border: 1px solid var(--border);
   min-height: 300px;
   box-shadow: var(--shadow);
+}
+
+.search-section h2,
+.results-section h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent);
+  font-size: 1.25rem;
 }
 
