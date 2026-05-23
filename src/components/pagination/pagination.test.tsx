@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '../../components/__tests__/test-utils';
-import { Pagination } from './pagination';
+import Pagination  from './pagination';
 
 describe('Pagination', () => {
     it('should not render when totalPages <= 1', () => {
