@@ -1,36 +1,28 @@
 // src/components/test-error-button/test-error-button.tsx
-import { Component } from 'react';
+import { useState } from 'react';
 import './styles.css';
 
 interface TestErrorButtonProps {
     onError?: () => void;
 }
-
-interface TestErrorButtonState {
-    shouldThrow: boolean;
-}
-
-export class TestErrorButton extends Component<TestErrorButtonProps, TestErrorButtonState> {
-    state: TestErrorButtonState = {
-        shouldThrow: false,
-    };
-
-    handleTestError = (): void => {
-        if (this.props.onError) {
-            this.props.onError();
+export const TestErrorButton = ({onError}: TestErrorButtonProps) => {
+    const [shouldThrow, setShouldThrow] = useState(false);
+    
+    const handleTestError = () => {
+        if (onError) {
+            onError();
         }        
         
-        this.setState({ shouldThrow: true });
+        setShouldThrow(true);
     };
 
-    render() {
-        if (this.state.shouldThrow) {
+    if (shouldThrow) {
             throw new Error('Test error from "Test Error" button');
         }
 
         return (
             <button 
-                onClick={this.handleTestError}
+                onClick={handleTestError}
                 className="test-error-button"
                 title="Click to simulate an error"
                 type="button"
@@ -39,5 +31,4 @@ export class TestErrorButton extends Component<TestErrorButtonProps, TestErrorBu
                 Test Error
             </button>
         );
-    }
 }

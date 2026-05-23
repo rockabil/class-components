@@ -8,7 +8,6 @@ import {
 } from './api';
 import type { StapiCharacter } from './types/types';
 
-// Мок глобального fetch
 const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
 
@@ -18,7 +17,7 @@ describe('API Functions', () => {
   });
 
   describe('searchCharacters', () => {
-    it('должен выполнить POST-запрос с правильными параметрами', async () => {
+    it('should make a POST request with correct parameters', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ characters: [] }),
@@ -36,7 +35,7 @@ describe('API Functions', () => {
       );
     });
 
-    it('должен выбросить ошибку при ответе не ok', async () => {
+    it('should throw an error when response is not ok', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
@@ -45,7 +44,7 @@ describe('API Functions', () => {
       await expect(searchCharacters('Kirk')).rejects.toThrow('Server error: 500');
     });
 
-    it('должен вернуть массив персонажей', async () => {
+    it('should return an array of characters', async () => {
       const mockCharacters = [{ uid: '1', name: 'Kirk' }];
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -56,7 +55,7 @@ describe('API Functions', () => {
       expect(result).toEqual(mockCharacters);
     });
 
-    it('должен вернуть пустой массив, если characters отсутствует', async () => {
+    it('should return an empty array when characters are missing', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({}),
@@ -68,7 +67,7 @@ describe('API Functions', () => {
   });
 
   describe('fetchCharacterDetails', () => {
-    it('должен выполнить GET-запрос к правильному URL', async () => {
+    it('should make a GET request to the correct URL', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ character: { uid: '1', name: 'Kirk' } }),
@@ -81,7 +80,7 @@ describe('API Functions', () => {
       );
     });
 
-    it('должен выбросить ошибку при неудачном запросе', async () => {
+    it('should throw an error on failed request', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false });
 
       await expect(fetchCharacterDetails('123')).rejects.toThrow(
@@ -91,22 +90,22 @@ describe('API Functions', () => {
   });
 
   describe('generateDescription', () => {
-    it('должен сгенерировать описание с полом', () => {
+    it('should generate description with gender', () => {
       const character = { gender: 'M' } as StapiCharacter;
       expect(generateDescription(character)).toContain('Gender: Male');
     });
 
-    it('должен добавить "Deceased" для умерших', () => {
+    it('should add "Deceased" for deceased characters', () => {
       const character = { deceased: true } as StapiCharacter;
       expect(generateDescription(character)).toContain('Deceased');
     });
 
-    it('должен добавить "Hologram" для голограмм', () => {
+    it('should add "Hologram" for holograms', () => {
       const character = { hologram: true } as StapiCharacter;
       expect(generateDescription(character)).toContain('Hologram');
     });
 
-    it('должен обрезать bio до 100 символов', () => {
+    it('should truncate bio to 100 characters', () => {
       const longBio = 'a'.repeat(200);
       const character = { bio: longBio } as StapiCharacter;
       const result = generateDescription(character);
@@ -114,14 +113,14 @@ describe('API Functions', () => {
       expect(result).toContain('...');
     });
 
-    it('должен вернуть сообщение по умолчанию, если нет данных', () => {
+    it('should return default message when no data available', () => {
       const character = {} as StapiCharacter;
       expect(generateDescription(character)).toBe('No additional information available');
     });
   });
 
   describe('loadAllCharactersWithDetails', () => {
-    it('должен загрузить всех персонажей с деталями', async () => {
+    it('should load all characters with details', async () => {
       const mockCharacters = [
         { uid: '1', name: 'Kirk' },
         { uid: '2', name: 'Spock' },
@@ -153,7 +152,7 @@ describe('API Functions', () => {
       expect(results[1].name).toBe('Spock');
     });
 
-    it('должен выбросить ошибку, если персонажи не найдены', async () => {
+    it('should throw an error when no characters found', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ characters: [] }),
@@ -162,7 +161,7 @@ describe('API Functions', () => {
       await expect(loadAllCharactersWithDetails()).rejects.toThrow('No characters found');
     });
 
-    it('должен обработать ошибку при загрузке деталей и добавить fallback', async () => {
+    it('should handle error when loading details and add fallback', async () => {
       const mockCharacters = [{ uid: '1', name: 'Kirk' }];
       
       mockFetch.mockResolvedValueOnce({
@@ -174,7 +173,7 @@ describe('API Functions', () => {
 
       const results = await loadAllCharactersWithDetails();
       
-      expect(results[0].description).toBe('Information not available');
+      expect(results[0].description).toBe('Detailed information not available');
     });
   });
 });

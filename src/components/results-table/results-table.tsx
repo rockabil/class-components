@@ -1,18 +1,18 @@
-import { Component } from "react";
 import type { SearchResult } from "../../types/types";
 import { ErrorMessage } from "../error-message/error-message";
-
+import './module.css';
 interface ResultsTableProps {
     results: SearchResult[];
     loading: boolean;
     error: string | null;
     hasSearched: boolean;
+    onSelectCharacter?: (id: string) => void;
+    selectedCharacterId?: string | null;
 }
 
-export class ResultsTable extends Component<ResultsTableProps> {
-    render() {
-        const { results, loading, error, hasSearched } = this.props;
-
+export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCharacter,
+    selectedCharacterId }: ResultsTableProps) => {
+    {        
         if (loading) {
             return <div className="loading">Loading characters from Star Trek universe...</div>
         }
@@ -30,9 +30,10 @@ export class ResultsTable extends Component<ResultsTableProps> {
         }
 
         return (
-            <table className="results-table">
+            <div className="results-table-container">
+                <table className="results-table">
                 <thead>
-                    <tr>
+                    <tr>                        
                         <th>Name</th>
                         <th>Gender</th>
                         <th>Species</th>
@@ -43,7 +44,9 @@ export class ResultsTable extends Component<ResultsTableProps> {
                 </thead>
                 <tbody>
                     {results.map((item) => (
-                        <tr key={item.id}>
+                        <tr key={item.id} onClick={() => onSelectCharacter?.(item.id)}
+                            className={`results-row ${selectedCharacterId === item.id ? 'selected' : ''}`}>
+                            
                             <td>{item.name}</td>
                             <td>{item.gender === 'M' ? '♂ Male' : item.gender === 'F' ? '♀ Female' : item.gender || '—'}</td>
                             <td>
@@ -56,6 +59,7 @@ export class ResultsTable extends Component<ResultsTableProps> {
                     ))}
                 </tbody>
             </table>
+            </div>
         )
     }
 }

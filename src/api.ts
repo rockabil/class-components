@@ -10,6 +10,7 @@ export const searchCharacters = async (name: string, pageNumber = 0, pageSize = 
     formData.append('pageNumber', pageNumber.toString());
     formData.append('pageSize', pageSize.toString());
     
+    
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -31,12 +32,22 @@ export const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter
     const response = await fetch(url);
 
     if (!response.ok) {
+        if (response.status === 404) {
+                throw new Error(`Character ${uid} not found in database`);
+            }
         throw new Error(`Failed to fetch details for ${uid}`);
     }
 
     const data = await response.json();
+
+    if (!data || !data.character) {
+            throw new Error(`No detailed data available for ${uid}`);
+        }
+
     return data.character;
 };
+
+
 
 export const generateDescription = (character: StapiCharacter): string => {
     const details: string[] = [];
@@ -75,36 +86,41 @@ export const generateDescription = (character: StapiCharacter): string => {
 };
 
 export const loadAllCharactersWithDetails = async (): Promise<SearchResult[]> => {
-    const characters = await searchCharacters('q', 0, 100);
+    const characters = await searchCharacters('', 0, 500);
 
     if (!characters.length) {
-        throw new Error ('No characters found');
+        throw new Error('No characters found');
     }
 
-    const results: SearchResult[] = [];
-
-    for (const char of characters) {
-        try {
-            const details = await fetchCharacterDetails(char.uid);
-
-            results.push({
-                id: details.uid,
-                name: details.name,
-                description: generateDescription(details),
-                gender: details.gender,
-                deceased: details.deceased,
-                hologram: details.hologram,
-                fictionalCharacter: details.fictionalCharacter,
-                species: details.species?.name,
-                organizations: details.organizations?.map(org => org.name),
-            });
-        } catch {
-            results.push({
-                id: char.uid,
-                name: char.name,
-                description: 'Information not available',
-            });
-        }
-    }
-    return results;
-}
+    const results = await Promise.allSettled(
+        characters.map(async (char) => {
+            try {
+                const details = await fetchCharacterDetails(char.uid);
+                return {
+                    id: details.uid,
+                    name: details.name,
+                    description: generateDescription(details),
+                    gender: details.gender,
+                    deceased: details.deceased,
+                    hologram: details.hologram,
+                    fictionalCharacter: details.fictionalCharacter,
+                    species: details.species?.name,
+                    organizations: details.organizations?.map(org => org.name),
+                } as SearchResult;
+            } catch {
+                return {
+                    id: char.uid,
+                    name: char.name,
+                    description: 'Detailed information not available',
+                    gender: char.gender,
+                    deceased: char.deceased,
+                    hologram: char.hologram,
+                } as SearchResult;
+            }
+        })
+    );
+    
+    return results
+        .filter((result): result is PromiseFulfilledResult<SearchResult> => result.status === 'fulfilled')
+        .map(result => result.value);
+};
