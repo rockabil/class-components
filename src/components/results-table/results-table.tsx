@@ -1,5 +1,6 @@
 import type { SearchResult } from "../../types/types";
 import { ErrorMessage } from "../error-message/error-message";
+import { useSelectedItemsStore } from "../../store/selected-items-store";
 import './module.css';
 interface ResultsTableProps {
     results: SearchResult[];
@@ -12,6 +13,7 @@ interface ResultsTableProps {
 
 export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCharacter,
     selectedCharacterId }: ResultsTableProps) => {
+        const { selectedIds, toggleSelect } = useSelectedItemsStore();
     {        
         if (loading) {
             return <div className="loading">Loading characters from Star Trek universe...</div>
@@ -33,7 +35,8 @@ export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCha
             <div className="results-table-container">
                 <table className="results-table">
                 <thead>
-                    <tr>                        
+                    <tr>
+                        <th className={`checkbox`}></th>                        
                         <th>Name</th>
                         <th>Gender</th>
                         <th>Species</th>
@@ -46,7 +49,11 @@ export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCha
                     {results.map((item) => (
                         <tr key={item.id} onClick={() => onSelectCharacter?.(item.id)}
                             className={`results-row ${selectedCharacterId === item.id ? 'selected' : ''}`}>
-                            
+                            <td onClick={(e) => e.stopPropagation()}>
+                                <input type="checkbox" checked={selectedIds.includes(item.id)}
+                                onChange={() => toggleSelect(item.id)}
+                                />
+                            </td>                            
                             <td>{item.name}</td>
                             <td>{item.gender === 'M' ? '♂ Male' : item.gender === 'F' ? '♀ Female' : item.gender || '—'}</td>
                             <td>

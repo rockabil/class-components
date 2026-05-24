@@ -55,6 +55,10 @@ button:disabled {
     border-left: 3px solid var(--accent);
 }
 
+.checkbox {
+  width: 40px;
+}
+
 @media (max-width: 768px) {
   .results-table th,
   .results-table td {
