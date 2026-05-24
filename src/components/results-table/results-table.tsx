@@ -36,7 +36,7 @@ export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCha
                 <table className="results-table">
                 <thead>
                     <tr>
-                        <th className={`checkbox`}></th>                        
+                        <th className="checkbox"></th>                        
                         <th>Name</th>
                         <th>Gender</th>
                         <th>Species</th>

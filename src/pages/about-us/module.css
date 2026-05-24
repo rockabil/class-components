@@ -90,6 +90,7 @@
   margin: 0 0 1rem 0;
   padding-left: 1.5rem;
   color: var(--text-h);
+  list-style-type: none;
 }
 
 .author-info li {
