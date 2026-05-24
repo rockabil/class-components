@@ -8,6 +8,7 @@ import { DetailPanel } from "../detail-panel/detail-panel";
 import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
 import { loadAllCharactersWithDetails } from "../../api";
+import { Flyout } from '../flyout/flyout';
 import './module.css';
 
 const STORAGE_KEY = 'lastSearchQuery';
@@ -146,8 +147,10 @@ export const SearchView = () => {
                 <DetailPanel 
                     characterId={selectedCharacterId}
                     onClose={closeDetails}
-                />
+                />               
             </div>
+            <Flyout allItems={allResults} />
         </div>
+        
     );
 };

@@ -1,0 +1,11 @@
+.flyout {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
