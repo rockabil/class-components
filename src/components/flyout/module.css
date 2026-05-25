@@ -2,10 +2,60 @@
   position: sticky;
   bottom: 0;
   background: var(--bg-color);
+  color: var(--accent);
   border-top: 1px solid var(--border-color);
   padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 100;
+}
+
+.flyout-toggle-button {
+  color: var(--text-h);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.flyout-toggle-button {
+  background: none;
+  border: none;
+  font-family: inherit;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.flyout-toggle-button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.flyout-toggle-button:hover {
+  color: var(--accent);
+  background: rgba(56, 55, 95, 0.1);
+}
+
+.flyout-toggle-button:hover::after {
+  width: 80%;
+}
+
+.flyout-toggle-button.active {
+  
+  color: var(--accent);
+}
+
+.flyout-toggle-button.active::after {
+  width: 80%;
 }

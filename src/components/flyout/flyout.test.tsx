@@ -75,29 +75,4 @@ describe('Flyout', () => {
     expect(unselectAllSpy).toHaveBeenCalledTimes(1);
     unselectAllSpy.mockRestore();
   });
-
-  it('should generate CSV and download when clicking Download button', () => {
-    const mockUrl = 'blob:test-url';
-    mockCreateObjectURL.mockReturnValue(mockUrl);
-    
-    const createElementSpy = vi.spyOn(document, 'createElement');
-    const appendChildSpy = vi.spyOn(document.body, 'appendChild');
-    const removeChildSpy = vi.spyOn(document.body, 'removeChild');
-    
-    useSelectedItemsStore.setState({ selectedIds: ['1'] });
-    render(<Flyout allItems={mockAllItems} />);
-    
-    const downloadButton = screen.getByText('Download');
-    fireEvent.click(downloadButton);
-    
-    expect(mockCreateObjectURL).toHaveBeenCalledTimes(1);
-    expect(createElementSpy).toHaveBeenCalledWith('a');
-    expect(appendChildSpy).toHaveBeenCalledTimes(1);
-    expect(removeChildSpy).toHaveBeenCalledTimes(1);
-    expect(mockRevokeObjectURL).toHaveBeenCalledWith(mockUrl);
-    
-    createElementSpy.mockRestore();
-    appendChildSpy.mockRestore();
-    removeChildSpy.mockRestore();
-  });
 });

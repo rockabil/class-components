@@ -44,8 +44,8 @@ export const Flyout = ({ allItems }: FlyoutProps) => {
     <div className="flyout">
       <span>Selected: {selectedIds.length}</span>
       <div>
-        <button onClick={unselectAll}>Unselect all</button>
-        <button onClick={handleDownload}>Download</button>
+        <button onClick={unselectAll} className="flyout-toggle-button">Unselect all</button>
+        <button onClick={handleDownload} className="flyout-toggle-button">Download</button>
       </div>
     </div>
   );
