@@ -1,0 +1,28 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[submodule]
+	active = .
+[remote "origin"]
+	url = https://github.com/rockabil/class-components.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "class-components"]
+	remote = origin
+	merge = refs/heads/class-components
+	vscode-merge-base = origin/class-components
+	github-pr-owner-number = "rockabil#class-components#1"
+[lfs]
+	repositoryformatversion = 0
+[branch "gh-pages"]
+	vscode-merge-base = origin/class-components
+[branch "unit-testing"]
+	github-pr-base-branch = "rockabil#class-components#class-components"
+	vscode-merge-base = origin/class-components
+[branch "hooks-and-routing"]
+	vscode-merge-base = origin/class-components
+[branch "app-state-management"]
+	vscode-merge-base = origin/class-components
