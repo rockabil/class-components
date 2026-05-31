@@ -79,7 +79,10 @@
   color: var(--accent);
 }
 
-.app-header nav a.active::after
+.app-header nav a.active::after {
+  width: 80%;
+}
+
 .theme-toggle-button.active::after {
   width: 80%;
 }

@@ -1,9 +1,9 @@
 .flyout {
   position: sticky;
   bottom: 0;
-  background: var(--bg-color);
+  background: var(--background-color);
   color: var(--accent);
-  border-top: 1px solid var(--border-color);
+  border: none;
   padding: 12px 20px;
   display: flex;
   justify-content: space-between;
@@ -12,22 +12,19 @@
 }
 
 .flyout-toggle-button {
+  background: none;
   color: var(--text-h);
+  border: none;
   text-decoration: none;
+  display: inline-block;
+  text-transform: capitalize;
   font-size: 1rem;
   font-weight: 300;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
   position: relative;
-}
-
-.flyout-toggle-button {
-  background: none;
-  border: none;
-  font-family: inherit;
-  display: inline-block;
-  text-transform: capitalize;
+  font-family: var(--font-family)
 }
 
 .flyout-toggle-button::after {
