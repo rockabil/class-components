@@ -5,8 +5,8 @@ import {
   fetchCharacterDetails, 
   generateDescription, 
   loadAllCharactersWithDetails 
-} from './api';
-import type { StapiCharacter } from './types/types';
+} from '../api/api'
+import type { StapiCharacter } from '../types/types';
 
 const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
