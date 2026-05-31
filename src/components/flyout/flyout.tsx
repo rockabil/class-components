@@ -1,4 +1,5 @@
 import { useSelectedItemsStore } from '../../store/selected-items-store';
+import { exportSelectedItemsToCSV } from '../../utils/csv-export';
 import type { SearchResult } from '../../types/types';
 import './module.css';
 
@@ -12,32 +13,7 @@ export const Flyout = ({ allItems }: FlyoutProps) => {
   if (selectedIds.length === 0) return null;
 
   const handleDownload = () => {
-    const selectedItems = allItems.filter(item => selectedIds.includes(item.id));
-    const headers = ['Name', 'Gender', 'Species', 'Status', 'Organization', 'Description'];
-    
-     const rows = selectedItems.map(item => [
-      item.name,
-      item.gender === 'M' ? 'Male' : item.gender === 'F' ? 'Female' : 'Unknown',
-      item.species || '—',
-      item.deceased ? 'Deceased' : 'Alive',
-      item.organizations?.slice(0, 2).join(', ') || '—',
-      (item.description || '—').replace(/,/g, ';')
-    ]);
-
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
-
-    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${selectedIds.length}_items.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    exportSelectedItemsToCSV(selectedIds, allItems);
   };
 
   return (
