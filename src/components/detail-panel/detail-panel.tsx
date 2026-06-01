@@ -15,12 +15,15 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
     const errorMessage = error instanceof Error ? error.message : null;
 
     return (
-        <div className="detail-panel">
-            <button onClick={() => refetch()} className="refresh-details-button">
-                Refresh Details
-            </button>
+        <div className="detail-panel">            
             <div className="detail-panel-header">
-                <h2>Character Details</h2>
+                <div className='detail-panel-block'>
+                    <h2>Character Details</h2>
+                    <button onClick={() => refetch()} className="refresh-details-button">
+                Refresh Details
+                </button>
+
+                </div>
                 <button onClick={onClose} className="close-button" aria-label="Close">
                     ✕
                 </button>
