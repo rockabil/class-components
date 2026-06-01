@@ -14,7 +14,7 @@ const STORAGE_KEY = 'lastSearchQuery';
 const ITEMS_PER_PAGE = 20;
 
 export const SearchView = () => {
-    const { data: allResults = [], isLoading, error, refetch } = useCharacters();
+    const { data: allResults = [], isLoading, isFetching, error, refetch } = useCharacters();
     
     const [searchQuery, setSearchQuery] = useState(() => {
         return localStorage.getItem(STORAGE_KEY) || '';
@@ -81,9 +81,11 @@ export const SearchView = () => {
 
     const errorMessage = error instanceof Error ? error.message : null;
     
+    const showLoader = isLoading || isFetching;
+
     return (
         <div className="search-view">
-            {isLoading && <Loader size={60} speed={0.8} thickness={3} />}
+            {showLoader && <Loader size={60} speed={0.8} thickness={3} />}
 
             <button onClick={() => refetch()} className="refresh-button">
                 Refresh Data
