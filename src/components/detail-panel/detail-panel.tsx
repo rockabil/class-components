@@ -8,7 +8,7 @@ interface DetailPanelProps {
 }
 
 export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
-    const { data: details, isLoading, error } = useCharacterDetails(characterId);    
+    const { data: details, isLoading, error, refetch } = useCharacterDetails(characterId);    
 
     if (!characterId) return null;
 
@@ -16,6 +16,9 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
 
     return (
         <div className="detail-panel">
+            <button onClick={() => refetch()} className="refresh-details-button">
+                Refresh Details
+            </button>
             <div className="detail-panel-header">
                 <h2>Character Details</h2>
                 <button onClick={onClose} className="close-button" aria-label="Close">
