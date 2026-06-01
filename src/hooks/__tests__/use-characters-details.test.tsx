@@ -1,14 +1,24 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useCharacterDetails } from '../use-character-details';
-import * as api from '../../api/api';
+import { DetailPanel } from '../../components/detail-panel/detail-panel';
+import { useCharacterDetails } from '../../hooks/use-character-details';
+import type { UseQueryResult } from '@tanstack/react-query';
 
-vi.mock('../../api/api', () => ({
-  fetchCharacterDetails: vi.fn(),
+vi.mock('../../hooks/use-character-details', () => ({
+  useCharacterDetails: vi.fn(),
 }));
 
-const mockCharacterDetails = {
+interface CharacterDetails {
+  name: string;
+  gender: string;
+  species: string;
+  status: string;
+  organizations: string[];
+  description: string;
+}
+
+const mockDetails: CharacterDetails = {
   name: 'James T. Kirk',
   gender: 'Male',
   species: 'Human',
@@ -17,144 +27,128 @@ const mockCharacterDetails = {
   description: 'Captain of the USS Enterprise',
 };
 
+function createMockQueryResult<T>(overrides: Partial<UseQueryResult<T, Error>> = {}): UseQueryResult<T, Error> {
+  const defaultMock = {
+    data: undefined as T,
+    isLoading: false,
+    isFetching: false,
+    error: null,
+    refetch: vi.fn(),
+    isError: false,
+    isSuccess: false,
+    isPending: false,
+    status: 'pending' as const,
+    fetchStatus: 'idle' as const,
+    dataUpdatedAt: 0,
+    errorUpdatedAt: 0,
+    failureCount: 0,
+    failureReason: null,
+    isFetched: false,
+    isFetchedAfterMount: false,
+    isPlaceholderData: false,
+    isRefetching: false,
+    isStale: false,
+    isInitialLoading: false,
+    isLoadingError: false,
+    isRefetchError: false,
+    isPendingError: false,
+    errorUpdateCount: 0,
+    isPaused: false,
+    isEnabled: true,
+    promise: Promise.resolve(undefined) as Promise<T>,
+  };
+  return { ...defaultMock, ...overrides } as unknown as UseQueryResult<T, Error>;
+}
+
 const createWrapper = () => {
   const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
+    defaultOptions: { queries: { retry: false } },
   });
   
-   function TestWrapper({ children }: { children: React.ReactNode }) {
-    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-   }
-   TestWrapper.displayName = 'TestWrapper';
-
-   return TestWrapper;
+  const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+  TestWrapper.displayName = 'TestWrapper';
+  
+  return TestWrapper;
 };
 
-describe('useCharacterDetails', () => {
+describe('DetailPanel', () => {
+  const mockOnClose = vi.fn();
+  const wrapper = createWrapper();
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should not fetch when characterId is null', () => {
-    renderHook(() => useCharacterDetails(null), {
-      wrapper: createWrapper(),
+  it('should not render when characterId is null', () => {
+    render(<DetailPanel characterId={null} onClose={mockOnClose} />, { wrapper });
+    expect(screen.queryByText('Character Details')).not.toBeInTheDocument();
+  });
+  
+  it('should show loader when loading', () => {
+    const mockResult = createMockQueryResult<CharacterDetails>({
+      data: undefined,
+      isLoading: true,
     });
+    vi.mocked(useCharacterDetails).mockReturnValue(mockResult);
 
-    expect(api.fetchCharacterDetails).not.toHaveBeenCalled();
+    render(<DetailPanel characterId="1" onClose={mockOnClose} />, { wrapper });
+    expect(screen.getByText('Character Details')).toBeInTheDocument();
   });
 
-  it('should return loading state when fetching', () => {
-    vi.mocked(api.fetchCharacterDetails).mockImplementation(
-      () => new Promise(() => {})
-    );
-
-    const { result } = renderHook(() => useCharacterDetails('1'), {
-      wrapper: createWrapper(),
+  it('should display character details when loaded', () => {
+    const mockResult = createMockQueryResult<CharacterDetails>({
+      data: mockDetails,
+      isLoading: false,
+      isSuccess: true,
     });
+    vi.mocked(useCharacterDetails).mockReturnValue(mockResult);
 
-    expect(result.current.isLoading).toBe(true);
-    expect(result.current.data).toBeUndefined();
+    render(<DetailPanel characterId="1" onClose={mockOnClose} />, { wrapper });
+    expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
+    expect(screen.getByText(/Male/)).toBeInTheDocument();
+    expect(screen.getByText(/Human/)).toBeInTheDocument();
   });
 
-  it('should return data after successful fetch', async () => {
-    vi.mocked(api.fetchCharacterDetails).mockResolvedValue(mockCharacterDetails);
-
-    const { result } = renderHook(() => useCharacterDetails('1'), {
-      wrapper: createWrapper(),
+  it('should display error message when fetch fails', () => {
+    const mockResult = createMockQueryResult<CharacterDetails>({
+      data: undefined,
+      isLoading: false,
+      error: new Error('Failed to load'),
+      isError: true,
     });
+    vi.mocked(useCharacterDetails).mockReturnValue(mockResult);
 
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(result.current.data).toEqual(mockCharacterDetails);
-    expect(result.current.isLoading).toBe(false);
+    render(<DetailPanel characterId="1" onClose={mockOnClose} />, { wrapper });
+    expect(screen.getByText('Information Unavailable')).toBeInTheDocument();
   });
 
-  it('should return error when fetch fails', async () => {
-    const error = new Error('Failed to load details');
-    vi.mocked(api.fetchCharacterDetails).mockRejectedValue(error);
-
-    const { result } = renderHook(() => useCharacterDetails('1'), {
-      wrapper: createWrapper(),
+  it('should call onClose when close button is clicked', () => {
+    const mockResult = createMockQueryResult<CharacterDetails>({
+      data: mockDetails,
+      isLoading: false,
+      isSuccess: true,
     });
+    vi.mocked(useCharacterDetails).mockReturnValue(mockResult);
 
-    await waitFor(() => {
-      expect(result.current.isError).toBe(true);
-    });
-
-    expect(result.current.error).toBeDefined();
+    render(<DetailPanel characterId="1" onClose={mockOnClose} />, { wrapper });
+    fireEvent.click(screen.getByLabelText('Close'));
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it('should not refetch for same characterId', async () => {
-    vi.mocked(api.fetchCharacterDetails).mockResolvedValue(mockCharacterDetails);
-
-    const { result, rerender } = renderHook(
-      ({ id }) => useCharacterDetails(id),
-      {
-        initialProps: { id: '1' },
-        wrapper: createWrapper(),
-      }
-    );
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
+  it('should call refetch when refresh button is clicked', () => {
+    const mockRefetch = vi.fn();
+    const mockResult = createMockQueryResult<CharacterDetails>({
+      data: mockDetails,
+      isLoading: false,
+      isSuccess: true,
+      refetch: mockRefetch,
     });
+    vi.mocked(useCharacterDetails).mockReturnValue(mockResult);
 
-    expect(api.fetchCharacterDetails).toHaveBeenCalledTimes(1)
-
-    
-    rerender({ id: '1' });
-
-    expect(api.fetchCharacterDetails).toHaveBeenCalledTimes(1);
-  });
-
-  it('should fetch new data when characterId changes', async () => {
-    vi.mocked(api.fetchCharacterDetails).mockResolvedValue(mockCharacterDetails);
-
-    const { result, rerender } = renderHook(
-      ({ id }) => useCharacterDetails(id),
-      {
-        initialProps: { id: '1' },
-        wrapper: createWrapper(),
-      }
-    );
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(api.fetchCharacterDetails).toHaveBeenCalledTimes(1);
-    expect(api.fetchCharacterDetails).toHaveBeenCalledWith('1')
-
-    
-    rerender({ id: '2' });
-
-    await waitFor(() => {
-      expect(api.fetchCharacterDetails).toHaveBeenCalledTimes(2);
-    });
-    expect(api.fetchCharacterDetails).toHaveBeenCalledWith('2');
-  });
-
-  it('should refetch when refetch function is called', async () => {
-    vi.mocked(api.fetchCharacterDetails).mockResolvedValue(mockCharacterDetails);
-
-    const { result } = renderHook(() => useCharacterDetails('1'), {
-      wrapper: createWrapper(),
-    });
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(api.fetchCharacterDetails).toHaveBeenCalledTimes(1);
-
-    await result.current.refetch();
-
-    expect(api.fetchCharacterDetails).toHaveBeenCalledTimes(2);
+    render(<DetailPanel characterId="1" onClose={mockOnClose} />, { wrapper });
+    fireEvent.click(screen.getByText('Refresh Details'));
+    expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 });

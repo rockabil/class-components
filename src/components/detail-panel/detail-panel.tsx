@@ -8,11 +8,12 @@ interface DetailPanelProps {
 }
 
 export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
-    const { data: details, isLoading, error, refetch } = useCharacterDetails(characterId);    
+    const { data: details, isLoading, isFetching, error, refetch } = useCharacterDetails(characterId);
 
     if (!characterId) return null;
 
     const errorMessage = error instanceof Error ? error.message : null;
+    const showLoader = isLoading || isFetching;
 
     return (
         <div className="detail-panel">            
@@ -20,16 +21,15 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
                 <div className='detail-panel-block'>
                     <h2>Character Details</h2>
                     <button onClick={() => refetch()} className="refresh-details-button">
-                Refresh Details
-                </button>
-
+                       Refresh Details
+                    </button>
                 </div>
                 <button onClick={onClose} className="close-button" aria-label="Close">
                     ✕
                 </button>
             </div>
             
-            {isLoading && <Loader size={40} speed={0.8} thickness={2} />}
+            {showLoader && <Loader size={40} speed={0.8} thickness={2} />}
             
             {error && (
                 <div className="detail-error">
@@ -41,7 +41,7 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
                 </div>
             )}
             
-            {details && ! isLoading && (
+            {details && ! showLoader && (
                 <div className="detail-content">
                     <h3>{details.name}</h3>
                     <div>
@@ -53,7 +53,7 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
                     <div>
                         <strong>Status:</strong> {details.status}
                     </div>
-                    {details.organizations.length > 0 && (
+                    {details.organizations && details.organizations.length > 0 && (
                         <div>
                             <strong>Organizations:</strong> {details.organizations.join(', ')}
                         </div>
