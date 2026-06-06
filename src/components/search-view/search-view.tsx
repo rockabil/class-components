@@ -8,13 +8,14 @@ import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
 import { useCharacters } from '../../hooks/use-characters';
 import { Flyout } from '../flyout/flyout';
+import { useQueryClient } from '@tanstack/react-query';
 import './module.css';
 
 const STORAGE_KEY = 'lastSearchQuery';
 const ITEMS_PER_PAGE = 20;
 
 export const SearchView = () => {
-    const { data: allResults = [], isLoading, isFetching, error, refetch } = useCharacters();
+    const { data: allResults = [], isLoading, isFetching, error } = useCharacters();
     
     const [searchQuery, setSearchQuery] = useState(() => {
         return localStorage.getItem(STORAGE_KEY) || '';
@@ -79,6 +80,13 @@ export const SearchView = () => {
         }
     }, [searchQuery]);
 
+    const queryClient = useQueryClient();
+
+
+    const handleRefreshData = () => {
+        queryClient.invalidateQueries({ queryKey: ['characters'] });
+    };
+
     const errorMessage = error instanceof Error ? error.message : null;
     
     const showLoader = isLoading || isFetching;
@@ -87,7 +95,7 @@ export const SearchView = () => {
         <div className="search-view">
             {showLoader && <Loader size={60} speed={0.8} thickness={3} />}
 
-            <button onClick={() => refetch()} className="refresh-button">
+            <button onClick={handleRefreshData} className="refresh-button">
                 Refresh Data
             </button>
             

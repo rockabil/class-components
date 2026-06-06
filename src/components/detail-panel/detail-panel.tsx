@@ -1,4 +1,5 @@
 import { useCharacterDetails } from '../../hooks/use-character-details';
+import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from '../loader';
 import './module.css';
 
@@ -8,19 +9,29 @@ interface DetailPanelProps {
 }
 
 export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
-    const { data: details, isLoading, isFetching, error, refetch } = useCharacterDetails(characterId);
+    const queryClient = useQueryClient();
+    
+    const { data: details, isLoading, isFetching, error } = useCharacterDetails(characterId);  
 
     if (!characterId) return null;
 
     const errorMessage = error instanceof Error ? error.message : null;
     const showLoader = isLoading || isFetching;
 
+    
+
+    const handleRefreshDetails = () => {
+        if (characterId) {
+            queryClient.invalidateQueries({ queryKey: ['character', characterId] });
+        }
+    };
+
     return (
         <div className="detail-panel">            
             <div className="detail-panel-header">
                 <div className='detail-panel-block'>
                     <h2>Character Details</h2>
-                    <button onClick={() => refetch()} className="refresh-details-button">
+                    <button onClick={handleRefreshDetails} className="refresh-details-button">
                        Refresh Details
                     </button>
                 </div>
