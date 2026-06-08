@@ -87,6 +87,13 @@ export const SearchView = () => {
         queryClient.invalidateQueries({ queryKey: ['characters'] });
     };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            queryClient.invalidateQueries({ queryKey: ['characters'] });
+        }, 5 * 60 * 1000);
+        return () => clearInterval(interval);
+    }, [queryClient]);
+
     const errorMessage = error instanceof Error ? error.message : null;
     
     const showLoader = isLoading || isFetching;

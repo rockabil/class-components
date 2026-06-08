@@ -27,7 +27,7 @@ export const searchCharacters = async (name: string, pageNumber = 0, pageSize = 
 };
 
 export const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter> => {
-    const url = `${STAPI_BASE_URL}/character/${uid}`;
+    const url = `${STAPI_BASE_URL}/character?uid=${uid}`;
     const response = await fetch(url);
 
     if (!response.ok) {
