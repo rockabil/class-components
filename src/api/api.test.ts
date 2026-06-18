@@ -76,7 +76,7 @@ describe('API Functions', () => {
       await fetchCharacterDetails('CHARA00001');
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://stapi.co/api/v1/rest/character/CHARA00001'
+        'https://stapi.co/api/v1/rest/character?uid=CHARA00001'
       );
     });
 

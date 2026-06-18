@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DetailPanel } from '../detail-panel/detail-panel';
 import { useCharacterDetails } from '../../hooks/use-character-details';
@@ -27,33 +28,28 @@ const mockDetails: CharacterDetails = {
   description: 'Captain of the USS Enterprise',
 };
 
-const createWrapper = () => {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
-  
+const createWrapper = (queryClient: QueryClient) => {
   const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
   TestWrapper.displayName = 'TestWrapper';
-  
   return TestWrapper;
 };
 
 describe('DetailPanel', () => {
   const mockOnClose = vi.fn();
-  const wrapper = createWrapper();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
-  
+
   it('should show loader when loading', () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const wrapper = createWrapper(queryClient);
     const mockReturn: Partial<UseQueryResult<CharacterDetails, Error>> = {
       data: undefined,
       isLoading: true,
       error: null,
-      refetch: vi.fn(),
     };
     vi.mocked(useCharacterDetails).mockReturnValue(mockReturn as UseQueryResult<CharacterDetails, Error>);
 
@@ -62,11 +58,12 @@ describe('DetailPanel', () => {
   });
 
   it('should display error message when fetch fails', () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const wrapper = createWrapper(queryClient);
     const mockReturn: Partial<UseQueryResult<CharacterDetails, Error>> = {
       data: undefined,
       isLoading: false,
       error: new Error('Failed to load'),
-      refetch: vi.fn(),
     };
     vi.mocked(useCharacterDetails).mockReturnValue(mockReturn as UseQueryResult<CharacterDetails, Error>);
 
@@ -75,11 +72,12 @@ describe('DetailPanel', () => {
   });
 
   it('should call onClose when close button is clicked', () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const wrapper = createWrapper(queryClient);
     const mockReturn: Partial<UseQueryResult<CharacterDetails, Error>> = {
       data: mockDetails,
       isLoading: false,
       error: null,
-      refetch: vi.fn(),
     };
     vi.mocked(useCharacterDetails).mockReturnValue(mockReturn as UseQueryResult<CharacterDetails, Error>);
 
@@ -88,18 +86,23 @@ describe('DetailPanel', () => {
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it('should call refetch when refresh button is clicked', () => {
-    const mockRefetch = vi.fn();
+  it('should call invalidateQueries when refresh details button is clicked', async () => {
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+    const wrapper = createWrapper(queryClient);
+
     const mockReturn: Partial<UseQueryResult<CharacterDetails, Error>> = {
       data: mockDetails,
       isLoading: false,
       error: null,
-      refetch: mockRefetch,
     };
     vi.mocked(useCharacterDetails).mockReturnValue(mockReturn as UseQueryResult<CharacterDetails, Error>);
 
-    render(<DetailPanel characterId="1" onClose={mockOnClose} />, { wrapper });
-    fireEvent.click(screen.getByText('Refresh Details'));
-    expect(mockRefetch).toHaveBeenCalledTimes(1);
+    render(<DetailPanel characterId="1" onClose={vi.fn()} />, { wrapper });
+
+    const refreshButton = screen.getByText('Refresh Details');
+    await userEvent.click(refreshButton);
+
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['character', '1'] });
   });
 });

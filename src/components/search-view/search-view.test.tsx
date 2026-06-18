@@ -5,6 +5,7 @@ import { SearchView } from './search-view';
 import { useCharacters } from '../../hooks/use-characters';
 import type { SearchResult } from '../../types/types';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 vi.mock('../../hooks/use-characters', () => ({
   useCharacters: vi.fn(),
@@ -47,6 +48,14 @@ const mockQuery = <T,>(overrides: {
   } as UseQueryResult<T, Error>;
 };
 
+// Кастомная render-функция с QueryClientProvider
+const renderSearchView = (ui: React.ReactElement, queryClient?: QueryClient) => {
+  const client = queryClient || new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return renderWithRouter(
+    <QueryClientProvider client={client}>{ui}</QueryClientProvider>
+  );
+};
+
 describe('SearchView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,8 +67,7 @@ describe('SearchView', () => {
       vi.mocked(useCharacters).mockReturnValue(
         mockQuery<SearchResult[]>({ isLoading: true, data: [] })
       );
-
-      renderWithRouter(<SearchView />);
+      renderSearchView(<SearchView />);
       expect(screen.getByText(/Loading characters from Star Trek universe/i)).toBeInTheDocument();
     });
   });
@@ -69,9 +77,7 @@ describe('SearchView', () => {
       vi.mocked(useCharacters).mockReturnValue(
         mockQuery<SearchResult[]>({ data: mockCharacters })
       );
-      
-      renderWithRouter(<SearchView />);
-
+      renderSearchView(<SearchView />);
       await waitFor(() => {
         expect(screen.getByText('James T. Kirk')).toBeInTheDocument();
         expect(screen.getByText('Spock')).toBeInTheDocument();
@@ -84,31 +90,28 @@ describe('SearchView', () => {
       vi.mocked(useCharacters).mockReturnValue(
         mockQuery<SearchResult[]>({ error: new Error('Failed to load data') })
       );
-
-      renderWithRouter(<SearchView />);
-
+      renderSearchView(<SearchView />);
       await waitFor(() => {
         expect(screen.getByText(/Error:/i)).toBeInTheDocument();
       });
     });
   });
 
-  describe('Refresh Button', () => {
-    it('should call refetch when refresh button is clicked', async () => {
-      const mockRefetch = vi.fn();
+  describe('Refresh Button – Cache Invalidation', () => {
+    it('should call invalidateQueries when refresh button is clicked', async () => {
+      const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+      const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+      
       vi.mocked(useCharacters).mockReturnValue(
-        mockQuery<SearchResult[]>({ 
-          data: mockCharacters, 
-          refetch: mockRefetch 
-        })
+        mockQuery<SearchResult[]>({ data: mockCharacters })
       );
 
-      renderWithRouter(<SearchView />);
-
-      const refreshButton = screen.getByText('Refresh Data');
+      renderSearchView(<SearchView />, queryClient);
+      
+      const refreshButton = await screen.findByText('Refresh Data');
       await userEvent.click(refreshButton);
-
-      expect(mockRefetch).toHaveBeenCalledTimes(1);
+      
+      expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['characters'] });
     });
   });
 });
