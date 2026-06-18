@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { fetchCharacterDetails } from '../../api';
-import type { StapiCharacter } from '../../types/types';
+import { useCharacterDetails } from '../../hooks/use-character-details';
+import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from '../loader';
 import './module.css';
 
@@ -9,78 +8,51 @@ interface DetailPanelProps {
     onClose: () => void;
 }
 
-interface CharacterDetails {
-    name: string;
-    gender: string;
-    species: string;
-    status: string;
-    organizations: string[];
-    description: string;
-}
-
 export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
-    const [details, setDetails] = useState<CharacterDetails | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!characterId) {        
-            return;
-        }
-
-        const loadDetails = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const data: StapiCharacter = await fetchCharacterDetails(characterId);
-
-                if (!data || !data.name) {
-                    throw new Error('No detailed information available for this character');
-                }
-
-                setDetails({
-                    name: data.name,
-                    gender: data.gender === 'M' ? 'Male' : data.gender === 'F' ? 'Female' : 'Unknown',
-                    species: data.species?.name || 'Unknown',
-                    status: data.deceased ? 'Deceased' : 'Alive',
-                    organizations: data.organizations?.map((org) => org.name) || [],
-                    description: data.bio || 'No description available for this character',
-                });
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Failed to load details');
-                setDetails(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadDetails();
-    }, [characterId]);
+    const queryClient = useQueryClient();
+    
+    const { data: details, isLoading, isFetching, error } = useCharacterDetails(characterId);  
 
     if (!characterId) return null;
 
+    const errorMessage = error instanceof Error ? error.message : null;
+    const showLoader = isLoading || isFetching;
+
+    
+
+    const handleRefreshDetails = () => {
+        if (characterId) {
+            queryClient.invalidateQueries({ queryKey: ['character', characterId] });
+        }
+    };
+
     return (
-        <div className="detail-panel">
+        <div className="detail-panel">            
             <div className="detail-panel-header">
-                <h2>Character Details</h2>
+                <div className='detail-panel-block'>
+                    <h2>Character Details</h2>
+                    <button onClick={handleRefreshDetails} className="refresh-details-button">
+                       Refresh Details
+                    </button>
+                </div>
                 <button onClick={onClose} className="close-button" aria-label="Close">
                     ✕
                 </button>
             </div>
             
-            {loading && <Loader size={40} speed={0.8} thickness={2} />}
+            {showLoader && <Loader size={40} speed={0.8} thickness={2} />}
             
             {error && (
                 <div className="detail-error">
                     <strong>Information Unavailable</strong>
-                    <p>{error}</p>
+                    <p>{errorMessage}</p>
                     <p className="detail-hint">
                         Some characters may not have detailed information in the database.
                     </p>
                 </div>
             )}
             
-            {details && !loading && (
+            {details && ! showLoader && (
                 <div className="detail-content">
                     <h3>{details.name}</h3>
                     <div>
@@ -92,7 +64,7 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
                     <div>
                         <strong>Status:</strong> {details.status}
                     </div>
-                    {details.organizations.length > 0 && (
+                    {details.organizations && details.organizations.length > 0 && (
                         <div>
                             <strong>Organizations:</strong> {details.organizations.join(', ')}
                         </div>

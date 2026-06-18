@@ -45,6 +45,39 @@
     font-size: 1.25rem;
 }
 
+.refresh-button {
+  padding: 0.6rem 1.25rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+   background: var(--accent);
+  color: var(--text-color);
+  margin: 1rem;
+}
+
+.refresh-button:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.refresh-button:hover {
+  background: var(--accent-border);
+  color: var(--text-h);
+}
+.refresh-button:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--text-color);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 @media (max-width: 1024px) {
     .app-container {
         flex-direction: column;

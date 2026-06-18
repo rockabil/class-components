@@ -1,23 +1,22 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { type SearchResult } from "../../types/types";
 import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
 import Pagination from "../pagination/pagination";
 import { DetailPanel } from "../detail-panel/detail-panel";
 import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
-import { loadAllCharactersWithDetails } from "../../api";
+import { useCharacters } from '../../hooks/use-characters';
 import { Flyout } from '../flyout/flyout';
+import { useQueryClient } from '@tanstack/react-query';
 import './module.css';
 
 const STORAGE_KEY = 'lastSearchQuery';
 const ITEMS_PER_PAGE = 20;
 
 export const SearchView = () => {
-    const [allResults, setAllResults] = useState<SearchResult[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const { data: allResults = [], isLoading, isFetching, error } = useCharacters();
+    
     const [searchQuery, setSearchQuery] = useState(() => {
         return localStorage.getItem(STORAGE_KEY) || '';
     });
@@ -71,31 +70,7 @@ export const SearchView = () => {
         if (currentPage !== 1) {
             goToPage(1);
         }
-    }, [currentPage, goToPage]);
-    
-    useEffect(() => {
-        let isMounted = true;
-        
-        const fetchData = async () => {
-            if (!isMounted) return;
-            setLoading(true);
-            setError(null);
-            
-            try {
-                const data = await loadAllCharactersWithDetails();
-                if (isMounted) setAllResults(data);
-            } catch (err) {
-                if (isMounted) {
-                    setError(err instanceof Error ? err.message : 'Failed to load data');
-                }
-            } finally {
-                if (isMounted) setLoading(false);
-            }
-        };
-        
-        fetchData();
-        return () => { isMounted = false; };
-    }, []);    
+    }, [currentPage, goToPage]);   
     
     useEffect(() => {
         if (searchQuery) {
@@ -104,10 +79,32 @@ export const SearchView = () => {
             localStorage.removeItem(STORAGE_KEY);
         }
     }, [searchQuery]);
+
+    const queryClient = useQueryClient();
+
+
+    const handleRefreshData = () => {
+        queryClient.invalidateQueries({ queryKey: ['characters'] });
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            queryClient.invalidateQueries({ queryKey: ['characters'] });
+        }, 5 * 60 * 1000);
+        return () => clearInterval(interval);
+    }, [queryClient]);
+
+    const errorMessage = error instanceof Error ? error.message : null;
     
+    const showLoader = isLoading || isFetching;
+
     return (
         <div className="search-view">
-            {loading && <Loader size={60} speed={0.8} thickness={3} />}
+            {showLoader && <Loader size={60} speed={0.8} thickness={3} />}
+
+            <button onClick={handleRefreshData} className="refresh-button">
+                Refresh Data
+            </button>
             
             <div className={`app-container ${selectedCharacterId ? 'with-details' : ''}`}>
                 <div className="results-wrapper">
@@ -115,7 +112,7 @@ export const SearchView = () => {
                         <h2>Search</h2>
                         <SearchForm 
                             onSearch={handleSearch} 
-                            loading={loading} 
+                            loading={isLoading} 
                             initialQuery={searchQuery}
                         />
                     </div>
@@ -124,19 +121,19 @@ export const SearchView = () => {
                         <h2>Results ({filteredResults.length})</h2>
                         <ResultsTable 
                             results={paginatedResults} 
-                            loading={loading} 
-                            error={error} 
-                            hasSearched={!loading && allResults.length > 0}
+                            loading={isLoading} 
+                            error={errorMessage} 
+                            hasSearched={!isLoading && allResults.length > 0}
                             onSelectCharacter={selectCharacter}
                             selectedCharacterId={selectedCharacterId}
                         />
                         
-                        {!loading && !error && totalPages > 1 && (
+                        {!isLoading && !error && totalPages > 1 && (
                             <Pagination
                                 currentPage={currentPage}
                                 totalPages={totalPages}
                                 onPageChange={goToPage}
-                                disabled={loading}
+                                disabled={isLoading}
                             />
                         )}
                         

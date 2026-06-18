@@ -1,4 +1,4 @@
-import type { SearchResult, StapiCharacter } from "./types/types";
+import type { SearchResult, StapiCharacter } from "../types/types";
 
 const STAPI_BASE_URL = 'https://stapi.co/api/v1/rest';
 
@@ -9,7 +9,6 @@ export const searchCharacters = async (name: string, pageNumber = 0, pageSize = 
     formData.append('name', name);
     formData.append('pageNumber', pageNumber.toString());
     formData.append('pageSize', pageSize.toString());
-    
     
     const response = await fetch(url, {
         method: 'POST',
@@ -28,26 +27,24 @@ export const searchCharacters = async (name: string, pageNumber = 0, pageSize = 
 };
 
 export const fetchCharacterDetails = async (uid: string): Promise<StapiCharacter> => {
-    const url = `${STAPI_BASE_URL}/character/${uid}`;
+    const url = `${STAPI_BASE_URL}/character?uid=${uid}`;
     const response = await fetch(url);
 
     if (!response.ok) {
         if (response.status === 404) {
-                throw new Error(`Character ${uid} not found in database`);
-            }
+            throw new Error(`Character ${uid} not found in database`);
+        }
         throw new Error(`Failed to fetch details for ${uid}`);
     }
 
     const data = await response.json();
 
     if (!data || !data.character) {
-            throw new Error(`No detailed data available for ${uid}`);
-        }
+        throw new Error(`No detailed data available for ${uid}`);
+    }
 
     return data.character;
 };
-
-
 
 export const generateDescription = (character: StapiCharacter): string => {
     const details: string[] = [];
@@ -105,7 +102,7 @@ export const loadAllCharactersWithDetails = async (): Promise<SearchResult[]> =>
                     hologram: details.hologram,
                     fictionalCharacter: details.fictionalCharacter,
                     species: details.species?.name,
-                    organizations: details.organizations?.map(org => org.name),
+                    organizations: details.organizations?.map((org: { name: string }) => org.name),
                 } as SearchResult;
             } catch {
                 return {
