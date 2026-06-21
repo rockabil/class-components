@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { BrowserRouter } from 'react-router-dom';
 import { render, screen } from '../../components/__tests__/test-utils';
 import { Header } from './header';
 import { ThemeProvider } from '../../context/theme-context';

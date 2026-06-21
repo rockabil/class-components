@@ -1,4 +1,3 @@
-// src/components/test-error-button/test-error-button.tsx
 import { useState } from 'react';
 import './styles.css';
 

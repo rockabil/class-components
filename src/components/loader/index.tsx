@@ -1,4 +1,3 @@
-// src/components/loader/index.tsx
 import { motion, AnimatePresence } from 'framer-motion';
 import './styles.css';
 

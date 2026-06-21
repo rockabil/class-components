@@ -54,3 +54,7 @@ npm-debug.log*
 
 # Local configuration
 *.local
+
+# Next.js
+.next/
+out/

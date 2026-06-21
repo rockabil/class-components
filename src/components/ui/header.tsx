@@ -1,20 +1,21 @@
-import { Link } from 'react-router-dom';
-import { ROUTES } from '../../shared/routes';
+'use client';
+import  Link from 'next/link';
 import { useTheme } from '../../hooks/use-theme';
 import './module.css'
-
+import styles from './module.css';
 export const Header = () => {
     const { theme, toggleTheme } = useTheme()
     return (
-        <header className="app-header">
+        <header className={styles["app-header"]}>
             <h1>STAR TREK Heroes Search</h1>
             <nav>
-                <Link to={ROUTES.HOME}>Home</Link>
-                <Link to={ROUTES.ABOUT_US}>About Us</Link>
+                <Link href="/">Home</Link>
+                <Link href="/about-us">About Us</Link>
                 <button onClick={toggleTheme} className="theme-toggle-button">{theme === 'light' ? 'dark' : 'light'} theme
                 </button>
-            </nav>            
-        </header>        
+            </nav>  
+
+        </header>              
     );
 };
 

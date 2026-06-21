@@ -1,32 +1,49 @@
+'use client';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { SearchForm } from "../search-form/search-form";
 import { ResultsTable } from "../results-table/results-table";
-import Pagination from "../pagination/pagination";
+import { Pagination } from "../pagination/pagination";
 import { DetailPanel } from "../detail-panel/detail-panel";
 import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
 import { useCharacters } from '../../hooks/use-characters';
 import { Flyout } from '../flyout/flyout';
 import { useQueryClient } from '@tanstack/react-query';
+import type { SearchResult } from '@/types/types';
 import './module.css';
+
+interface SearchViewProps {
+  initialData: SearchResult[];
+}
 
 const STORAGE_KEY = 'lastSearchQuery';
 const ITEMS_PER_PAGE = 20;
 
-export const SearchView = () => {
-    const { data: allResults = [], isLoading, isFetching, error } = useCharacters();
+export const SearchView = ({ initialData }: SearchViewProps) => {
+    const { data: allResults = [], isLoading, isFetching, error } = useCharacters(initialData);
     
     const [searchQuery, setSearchQuery] = useState(() => {
         return localStorage.getItem(STORAGE_KEY) || '';
-    });
+    }); 
     
-    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
         
     const currentPage = Number(searchParams.get('page')) || 1;
-    const selectedCharacterId = searchParams.get('details');    
+    const selectedCharacterId = searchParams.get('details');
     
-    const filteredResults = useMemo(() => {
+    const updateParams = useCallback((newParams: URLSearchParams, options?: { replace?: boolean }) => {
+        const url = `${pathname}?${newParams.toString()}`;
+        if (options?.replace) {
+            router.replace(url);
+        } else {
+            router.push(url);
+        }
+    }, [pathname, router]); 
+    
+       const filteredResults = useMemo(() => {
         if (allResults.length === 0) return [];
         
         const trimmedQuery = searchQuery.trim();
@@ -35,33 +52,33 @@ export const SearchView = () => {
         return allResults.filter(item =>
             item.name.toLowerCase().includes(trimmedQuery.toLowerCase())
         );
-    }, [allResults, searchQuery]);    
+    }, [allResults, searchQuery]);
     
     const totalPages = Math.max(1, Math.ceil(filteredResults.length / ITEMS_PER_PAGE));
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const paginatedResults = filteredResults.slice(startIndex, startIndex + ITEMS_PER_PAGE);    
+    const paginatedResults = filteredResults.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     
     const goToPage = useCallback((page: number) => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(searchParams.toString());
         if (page === 1) {
             newParams.delete('page');
         } else {
             newParams.set('page', page.toString());
         }
-        setSearchParams(newParams, { replace: true });
-    }, [searchParams, setSearchParams]);    
+        updateParams(newParams, { replace: true });
+    }, [searchParams, updateParams]);    
     
     const selectCharacter = useCallback((id: string) => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(searchParams.toString());
         newParams.set('details', id);
-        setSearchParams(newParams, { replace: true });
-    }, [searchParams, setSearchParams]);    
+        updateParams(newParams, { replace: true });
+    }, [searchParams, updateParams]);    
     
     const closeDetails = useCallback(() => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(searchParams.toString());
         newParams.delete('details');
-        setSearchParams(newParams, { replace: true });
-    }, [searchParams, setSearchParams]);    
+        updateParams(newParams, { replace: true });
+    }, [searchParams, updateParams]);    
     
     const handleSearch = useCallback((query: string) => {
         const trimmed = query.trim();
