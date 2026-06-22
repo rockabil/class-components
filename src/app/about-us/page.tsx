@@ -1,6 +1,6 @@
 import styles from './about.module.css'
 
-export const AboutUsPage = () => {
+export default function AboutUsPage() {
     return (
         <div className={styles['about-us-page']}>
             <div className={styles['about-us-container']}>

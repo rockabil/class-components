@@ -1,8 +1,7 @@
 'use client';
 import  Link from 'next/link';
 import { useTheme } from '../../hooks/use-theme';
-import './module.css'
-import styles from './module.css';
+import styles from './header.module.css';
 export const Header = () => {
     const { theme, toggleTheme } = useTheme()
     return (
@@ -11,10 +10,9 @@ export const Header = () => {
             <nav>
                 <Link href="/">Home</Link>
                 <Link href="/about-us">About Us</Link>
-                <button onClick={toggleTheme} className="theme-toggle-button">{theme === 'light' ? 'dark' : 'light'} theme
+                <button onClick={toggleTheme} className={styles["theme-toggle-button"]}>{theme === 'light' ? 'dark' : 'light'} theme
                 </button>
-            </nav>  
-
+            </nav>
         </header>              
     );
 };

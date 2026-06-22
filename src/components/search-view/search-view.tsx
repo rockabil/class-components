@@ -23,9 +23,14 @@ const ITEMS_PER_PAGE = 20;
 export const SearchView = ({ initialData }: SearchViewProps) => {
     const { data: allResults = [], isLoading, isFetching, error } = useCharacters(initialData);
     
-    const [searchQuery, setSearchQuery] = useState(() => {
-        return localStorage.getItem(STORAGE_KEY) || '';
-    }); 
+    const [searchQuery, setSearchQuery] = useState<string>(''); 
+
+    useEffect(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            setSearchQuery(saved);
+        }       
+    }, []);
     
     const searchParams = useSearchParams();
     const router = useRouter();

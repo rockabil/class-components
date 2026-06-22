@@ -1,6 +1,6 @@
 .app-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 2rem;
     min-height: 100vh;
     padding: 1.5rem;
