@@ -1,0 +1,52 @@
+{
+  "Header": {
+    "title": "STAR TREK Heroes Search",
+    "home": "Home",
+    "about": "About Us"
+  },
+  "HomePage": {
+    "search": "Search",
+    "results": "Results",
+    "refresh": "Refresh Data"
+  },
+  "Footer": {
+    "copyright": "© 2026 StarTrek Search App"
+  },
+   "AboutPage": {
+    "title": "About Application",
+    "tagline": "STAR TREK Heroes Search - convenient search for characters of the universe Star Trek",
+    "aboutApp": "About the App",
+    "aboutAppText1": "This application allows you to search for characters from the Star Trek universe using the STAPI (Star Trek API). You can browse through characters, search by name, and view detailed information about each character including their species, organizations, and status.",
+    "aboutAppText2": "The app features real-time search, pagination, and saves your last search query for convenience.",
+    "aboutAuthor": "About the Author",
+    "developer": "Developer",
+    "developerDesc": "This application was developed as a learning project to demonstrate modern React development practices including:",
+    "techReact": "React with TypeScript",
+    "techHooks": "Functional components with Hooks",
+    "techRouter": "React Router for navigation",
+    "techPagination": "Custom hooks for pagination",
+    "techStorage": "Local storage for persistence",
+    "techTesting": "Comprehensive testing with Vitest",
+    "githubProfile": "GitHub Profile",
+    "rsSchool": "RS School React Course",
+    "rsSchoolDesc1": "This project was created as part of the <strong>RS School React Course</strong>, a free community-based educational program run by The Rolling Scopes developer community since 2013.",
+    "rsSchoolDesc2": "The course provides intensive training in React development with a focus on practical, real-world skills. Students learn modern React concepts including hooks, context, routing, state management, and testing.",
+    "learnMore": "Learn more about RS School React Course"
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "warning": "The page you are looking for does not exist or has been moved.",
+    "linkToHome": "← Back to Home"
+  }, 
+  "DetailPanel": {
+    "title": "Character Details",
+    "refreshing": "Refresh Details",
+    "informationWarning": "Information Unavailable",
+    "informationWarningExplanation": "Some characters may not have detailed information in the database.",
+    "gender": "Gender:",
+    "species": "Species:",
+    "status": "Status:",
+    "organizations": "Organizations:",
+    "description": "Description:"
+  }
+}
