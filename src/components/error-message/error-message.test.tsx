@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '../__tests__/test-utils';
-import { ErrorMessage } from './error-message';
+import ErrorMessage from './error-message';
 
 describe('ErrorMessage', () => {
   it('should display the error message', () => {

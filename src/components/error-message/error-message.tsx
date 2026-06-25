@@ -1,11 +1,13 @@
+import { getTranslations } from 'next-intl/server';
 interface ErrorMessageProps {
     message: string;
 }
 
-export const ErrorMessage = ({message}: ErrorMessageProps) => {
-   return (
+export default async function ErrorMessage({message}: ErrorMessageProps) {
+   const t = await getTranslations('ErrorMessage');
+    return (
             <div className="error-message" role="alert">
-                <strong>Error:</strong> {message}
+                <strong>{t('error')}:</strong> {message}
             </div>
         );
 }

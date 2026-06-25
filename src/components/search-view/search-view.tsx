@@ -1,14 +1,15 @@
 'use client';
+import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { SearchForm } from "../search-form/search-form";
-import { ResultsTable } from "../results-table/results-table";
+import ResultsTable  from "../results-table/results-table";
 import { Pagination } from "../pagination/pagination";
-import { DetailPanel } from "../detail-panel/detail-panel";
+import DetailPanel from "../detail-panel/detail-panel";
 import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
 import { useCharacters } from '../../hooks/use-characters';
-import { Flyout } from '../flyout/flyout';
+import Flyout from '../flyout/flyout';
 import { useQueryClient } from '@tanstack/react-query';
 import type { SearchResult } from '@/types/types';
 import './module.css';
@@ -20,7 +21,8 @@ interface SearchViewProps {
 const STORAGE_KEY = 'lastSearchQuery';
 const ITEMS_PER_PAGE = 20;
 
-export const SearchView = ({ initialData }: SearchViewProps) => {
+export default function SearchView({ initialData }: SearchViewProps) {
+    const t = useTranslations('SearchView');
     const { data: allResults = [], isLoading, isFetching, error } = useCharacters(initialData);
     
     const [searchQuery, setSearchQuery] = useState<string>(''); 
@@ -125,13 +127,13 @@ export const SearchView = ({ initialData }: SearchViewProps) => {
             {showLoader && <Loader size={60} speed={0.8} thickness={3} />}
 
             <button onClick={handleRefreshData} className="refresh-button">
-                Refresh Data
+                {t('refreshData')}
             </button>
             
             <div className={`app-container ${selectedCharacterId ? 'with-details' : ''}`}>
                 <div className="results-wrapper">
                     <div className="search-section">
-                        <h2>Search</h2>
+                        <h2>{t('search')}</h2>
                         <SearchForm 
                             onSearch={handleSearch} 
                             loading={isLoading} 
@@ -140,7 +142,7 @@ export const SearchView = ({ initialData }: SearchViewProps) => {
                     </div>
                     
                     <div className="results-section">
-                        <h2>Results ({filteredResults.length})</h2>
+                        <h2>{t('results')} ({filteredResults.length})</h2>
                         <ResultsTable 
                             results={paginatedResults} 
                             loading={isLoading} 

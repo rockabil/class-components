@@ -45,8 +45,31 @@
     "informationWarningExplanation": "У некоторых персонажей может отсутствовать подробная информация в базе данных.",
     "gender": "Пол:",
     "species": "Вид:",
-    "Status": "Статус:",
-    "Organizations": "Организации:",
-    "Description": "Описание:"
+    "status": "Статус:",
+    "organizations": "Организации:",
+    "description": "Описание:"
+  },
+  "ErrorMessage": {
+    "error": "Ошибка"
+  },
+  "Flyout": {
+    "unselection": "Снять всё",
+    "download": "Скачать"
+  }, 
+  "ResultsTable": {
+    "loading": "Загрузка персонажей из вселенной Star Trek ...",
+    "searching": "Введите ваш запрос и нажмите &quot;Найти&quot;",
+    "answer": "По вашему запросу персонажей не найдено",
+    "name": "Имя",
+    "gender": "Пол",
+    "species": "Вид",
+    "status": "Статус",
+    "organizations": "Организации",
+    "description": "Описание"
+  },
+  "SearchView": {
+    "refreshData": "Обновить данные",
+    "search": "Поиск",
+    "results": "Результаты"
   }
 }

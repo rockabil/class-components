@@ -1,7 +1,8 @@
+'use client'
 import { useCharacterDetails } from '../../hooks/use-character-details';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from '../loader';
-import { getTranslations } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 import './module.css';
 
 interface DetailPanelProps {
@@ -9,8 +10,8 @@ interface DetailPanelProps {
     onClose: () => void;
 }
 
-export default async function DetailPanel ({ characterId, onClose }: DetailPanelProps) {
-    const t = await getTranslations('DetailPanel');
+export default function DetailPanel ({ characterId, onClose }: DetailPanelProps) {
+    const t = useTranslations('DetailPanel');
     const queryClient = useQueryClient();
     
     const { data: details, isLoading, isFetching, error } = useCharacterDetails(characterId);  

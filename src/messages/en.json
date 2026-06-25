@@ -48,5 +48,28 @@
     "status": "Status:",
     "organizations": "Organizations:",
     "description": "Description:"
+  },
+  "ErrorMessage": {
+    "error": "Error"
+  },
+  "Flyout": {
+    "unselection": "Unselect all",
+    "download": "Download"
+  },
+  "ResultsTable": {
+    "loading": "Loading characters from Star Trek universe...",
+    "searching": "Enter your query and click &quot;Find&quot;",
+    "answer": "No characters found matching your query",
+    "name": "Name",
+    "gender": "Gender",
+    "species": "Species",
+    "status": "Status",
+    "organizations": "Organizations",
+    "description": "Description"
+  },
+  "SearchView": {
+    "refreshData": "Refresh Data",
+    "search": "Search",
+    "results": "Results"
   }
 }
