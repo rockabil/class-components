@@ -1,8 +1,10 @@
 {
   "Header": {
-    "title": "STAR TREK Поиск Героев",
+    "title": "STAR TREK Поиск персонажей",
     "home": "Главная",
-    "about": "О нас"
+    "about": "О нас",
+    "themeLight": "Светлая тема",
+    "themeDark": "Тёмная тема"
   },
   "HomePage": {
     "search": "Поиск",
@@ -29,7 +31,7 @@
     "techTesting": "Всестороннее тестирование с Vitest",
     "githubProfile": "Профиль GitHub",
     "rsSchool": "Курс RS School React",
-    "rsSchoolDesc1": "Этот проект был создан в рамках <strong>RS School React Course</strong> — бесплатной образовательной программы, проводимой сообществом разработчиков The Rolling Scopes с 2013 года.",
+    "rsSchoolDesc1": "Этот проект был создан в рамках RS School React Course — бесплатной образовательной программы, проводимой сообществом разработчиков The Rolling Scopes с 2013 года.",
     "rsSchoolDesc2": "Курс предлагает интенсивное обучение разработке на React с акцентом на практические, реальные навыки. Студенты изучают современные концепции React, включая хуки, контекст, маршрутизацию, управление состоянием и тестирование.",
     "learnMore": "Узнать больше о RS School React Course"
   },
@@ -64,7 +66,7 @@
     "gender": "Пол",
     "species": "Вид",
     "status": "Статус",
-    "organizations": "Организации",
+    "organization": "Организация",
     "description": "Описание"
   },
   "SearchView": {

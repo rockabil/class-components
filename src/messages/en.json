@@ -2,7 +2,9 @@
   "Header": {
     "title": "STAR TREK Heroes Search",
     "home": "Home",
-    "about": "About Us"
+    "about": "About Us",
+    "themeLight": "Light theme",
+  "themeDark": "Dark theme"
   },
   "HomePage": {
     "search": "Search",
@@ -64,7 +66,7 @@
     "gender": "Gender",
     "species": "Species",
     "status": "Status",
-    "organizations": "Organizations",
+    "organization": "Organization",
     "description": "Description"
   },
   "SearchView": {

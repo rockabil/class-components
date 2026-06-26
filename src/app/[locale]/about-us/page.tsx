@@ -34,8 +34,8 @@ export default async function AboutPage() {
                             </p>
                             <ul>
                                 <li>{t('techReact')}</li>
-                                <li>{t('techHoks')}</li>
-                                <li>{t('techRooter')}</li>
+                                <li>{t('techHooks')}</li>
+                                <li>{t('techRouter')}</li>
                                 <li>{t('techPagination')}</li>
                                 <li>{t('techStorage')}</li>
                                 <li>{t('techTesting')}</li>

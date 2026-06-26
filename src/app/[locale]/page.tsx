@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { SearchView } from '@/components/search-view/search-view';
+import SearchView from '@/components/search-view/search-view';
 import { loadAllCharactersWithDetails } from '@/api/api';
 
 export default async function HomePage() {
