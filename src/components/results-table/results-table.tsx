@@ -1,5 +1,7 @@
+'use client';
+import { useTranslations } from "next-intl";
 import type { SearchResult } from "../../types/types";
-import { ErrorMessage } from "../error-message/error-message";
+import ErrorMessage from "../error-message/error-message";
 import { useSelectedItemsStore } from "../../store/selected-items-store";
 import './module.css';
 interface ResultsTableProps {
@@ -11,12 +13,12 @@ interface ResultsTableProps {
     selectedCharacterId?: string | null;
 }
 
-export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCharacter,
-    selectedCharacterId }: ResultsTableProps) => {
+export default function ResultsTable({ results, loading, error, hasSearched, onSelectCharacter, selectedCharacterId }: ResultsTableProps) {
+        const t = useTranslations('ResultsTable');
         const { selectedIds, toggleSelect } = useSelectedItemsStore();
     {        
         if (loading) {
-            return <div className="loading">Loading characters from Star Trek universe...</div>
+            return <div className="loading">{t('loading')}</div>
         }
 
         if (error) {
@@ -24,11 +26,11 @@ export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCha
         }
 
         if (!hasSearched) {
-            return <div className="info-message">Enter your query and click &quot;Find&quot;</div>
+            return <div className="info-message">{t('searching')}</div>
         }
 
         if (results.length === 0) {
-            return <div className="info-message">No characters found matching your query</div>
+            return <div className="info-message">{t('answer')}</div>
         }
 
         return (
@@ -37,12 +39,12 @@ export const ResultsTable = ({ results, loading, error, hasSearched, onSelectCha
                 <thead>
                     <tr>
                         <th className="checkbox"></th>                        
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Species</th>
-                        <th>Status</th>
-                        <th>Organization</th>
-                        <th>Description</th>
+                        <th>{t('name')}</th>
+                        <th>{t('gender')}</th>
+                        <th>{t('species')}</th>
+                        <th>{t('status')}</th>
+                        <th>{t('organization')}</th>
+                        <th>{t('description')}</th>
                     </tr>
                 </thead>
                 <tbody>

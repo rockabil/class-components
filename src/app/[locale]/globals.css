@@ -58,7 +58,7 @@
   --table-bg-color: rgba(255, 255, 255, 0.05);
 }
 
-#root {
+.app-container {
   width: 1126px;
   max-width: 100%;
   margin: 0 auto;

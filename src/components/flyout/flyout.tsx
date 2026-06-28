@@ -1,3 +1,5 @@
+'use client';
+import { useTranslations } from 'next-intl';
 import { useSelectedItemsStore } from '../../store/selected-items-store';
 import { exportSelectedItemsToCSV } from '../../utils/csv-export';
 import type { SearchResult } from '../../types/types';
@@ -7,7 +9,8 @@ interface FlyoutProps {
   allItems: SearchResult[];
 }
 
-export const Flyout = ({ allItems }: FlyoutProps) => {
+export default function Flyout({ allItems }: FlyoutProps) {
+  const t = useTranslations('Flyout');
   const { selectedIds, unselectAll } = useSelectedItemsStore();
 
   if (selectedIds.length === 0) return null;
@@ -20,8 +23,8 @@ export const Flyout = ({ allItems }: FlyoutProps) => {
     <div className="flyout">
       <span>Selected: {selectedIds.length}</span>
       <div>
-        <button onClick={unselectAll} className="flyout-toggle-button">Unselect all</button>
-        <button onClick={handleDownload} className="flyout-toggle-button">Download</button>
+        <button onClick={unselectAll} className="flyout-toggle-button">{t('unselection')}</button>
+        <button onClick={handleDownload} className="flyout-toggle-button">{t('download')}</button>
       </div>
     </div>
   );

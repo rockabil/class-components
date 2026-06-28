@@ -1,6 +1,8 @@
+'use client'
 import { useCharacterDetails } from '../../hooks/use-character-details';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader } from '../loader';
+import { useTranslations } from 'next-intl';
 import './module.css';
 
 interface DetailPanelProps {
@@ -8,7 +10,8 @@ interface DetailPanelProps {
     onClose: () => void;
 }
 
-export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
+export default function DetailPanel ({ characterId, onClose }: DetailPanelProps) {
+    const t = useTranslations('DetailPanel');
     const queryClient = useQueryClient();
     
     const { data: details, isLoading, isFetching, error } = useCharacterDetails(characterId);  
@@ -30,9 +33,9 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
         <div className="detail-panel">            
             <div className="detail-panel-header">
                 <div className='detail-panel-block'>
-                    <h2>Character Details</h2>
+                    <h2>{t('title')}</h2>
                     <button onClick={handleRefreshDetails} className="refresh-details-button">
-                       Refresh Details
+                       {t('refreshing')}
                     </button>
                 </div>
                 <button onClick={onClose} className="close-button" aria-label="Close">
@@ -44,10 +47,10 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
             
             {error && (
                 <div className="detail-error">
-                    <strong>Information Unavailable</strong>
+                    <strong>{t('informationWarning')}</strong>
                     <p>{errorMessage}</p>
                     <p className="detail-hint">
-                        Some characters may not have detailed information in the database.
+                        {t('informationWarningExplanation')}
                     </p>
                 </div>
             )}
@@ -56,21 +59,21 @@ export const DetailPanel = ({ characterId, onClose }: DetailPanelProps) => {
                 <div className="detail-content">
                     <h3>{details.name}</h3>
                     <div>
-                        <strong>Gender:</strong> {details.gender}
+                        <strong>{t('gender')}</strong> {details.gender}
                     </div>
                     <div>
-                        <strong>Species:</strong> {details.species}
+                        <strong>{t('species')}</strong> {details.species}
                     </div>
                     <div>
-                        <strong>Status:</strong> {details.status}
+                        <strong>{t('status')}</strong> {details.status}
                     </div>
                     {details.organizations && details.organizations.length > 0 && (
                         <div>
-                            <strong>Organizations:</strong> {details.organizations.join(', ')}
+                            <strong>{t('organizations')}</strong> {details.organizations.join(', ')}
                         </div>
                     )}
                     <div>
-                        <strong>Description:</strong> {details.description}
+                        <strong>{t('description')}</strong> {details.description}
                     </div>
                 </div>
             )}

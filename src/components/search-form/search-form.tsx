@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import './module.css';
 
@@ -7,7 +8,7 @@ interface SearchFormProps {
     initialQuery?: string;
 }
 
-export const SearchForm = ({ onSearch, loading, initialQuery = '' }: SearchFormProps) => {
+export default function SearchForm({ onSearch, loading, initialQuery = '' }: SearchFormProps) {
     const [query, setQuery] = useState(initialQuery);
        
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,32 +1,56 @@
+'use client';
+import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { SearchForm } from "../search-form/search-form";
-import { ResultsTable } from "../results-table/results-table";
-import Pagination from "../pagination/pagination";
-import { DetailPanel } from "../detail-panel/detail-panel";
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import SearchForm from "../search-form/search-form";
+import ResultsTable  from "../results-table/results-table";
+import { Pagination } from "../pagination/pagination";
+import DetailPanel from "../detail-panel/detail-panel";
 import { Loader } from "../loader";
 import { TestErrorButton } from "../error-button";
 import { useCharacters } from '../../hooks/use-characters';
-import { Flyout } from '../flyout/flyout';
+import Flyout from '../flyout/flyout';
 import { useQueryClient } from '@tanstack/react-query';
+import type { SearchResult } from '@/types/types';
 import './module.css';
+
+interface SearchViewProps {
+  initialData: SearchResult[];
+}
 
 const STORAGE_KEY = 'lastSearchQuery';
 const ITEMS_PER_PAGE = 20;
 
-export const SearchView = () => {
-    const { data: allResults = [], isLoading, isFetching, error } = useCharacters();
+export default function SearchView({ initialData }: SearchViewProps) {
+    const t = useTranslations('SearchView');
+    const { data: allResults = [], isLoading, isFetching, error } = useCharacters(initialData);
     
-    const [searchQuery, setSearchQuery] = useState(() => {
-        return localStorage.getItem(STORAGE_KEY) || '';
-    });
+    const [searchQuery, setSearchQuery] = useState<string>(''); 
+
+    useEffect(() => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            setSearchQuery(saved);
+        }       
+    }, []);
     
-    const [searchParams, setSearchParams] = useSearchParams();
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
         
     const currentPage = Number(searchParams.get('page')) || 1;
-    const selectedCharacterId = searchParams.get('details');    
+    const selectedCharacterId = searchParams.get('details');
     
-    const filteredResults = useMemo(() => {
+    const updateParams = useCallback((newParams: URLSearchParams, options?: { replace?: boolean }) => {
+        const url = `${pathname}?${newParams.toString()}`;
+        if (options?.replace) {
+            router.replace(url);
+        } else {
+            router.push(url);
+        }
+    }, [pathname, router]); 
+    
+       const filteredResults = useMemo(() => {
         if (allResults.length === 0) return [];
         
         const trimmedQuery = searchQuery.trim();
@@ -35,33 +59,33 @@ export const SearchView = () => {
         return allResults.filter(item =>
             item.name.toLowerCase().includes(trimmedQuery.toLowerCase())
         );
-    }, [allResults, searchQuery]);    
+    }, [allResults, searchQuery]);
     
     const totalPages = Math.max(1, Math.ceil(filteredResults.length / ITEMS_PER_PAGE));
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const paginatedResults = filteredResults.slice(startIndex, startIndex + ITEMS_PER_PAGE);    
+    const paginatedResults = filteredResults.slice(startIndex, startIndex + ITEMS_PER_PAGE);
     
     const goToPage = useCallback((page: number) => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(searchParams.toString());
         if (page === 1) {
             newParams.delete('page');
         } else {
             newParams.set('page', page.toString());
         }
-        setSearchParams(newParams, { replace: true });
-    }, [searchParams, setSearchParams]);    
+        updateParams(newParams, { replace: true });
+    }, [searchParams, updateParams]);    
     
     const selectCharacter = useCallback((id: string) => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(searchParams.toString());
         newParams.set('details', id);
-        setSearchParams(newParams, { replace: true });
-    }, [searchParams, setSearchParams]);    
+        updateParams(newParams, { replace: true });
+    }, [searchParams, updateParams]);    
     
     const closeDetails = useCallback(() => {
-        const newParams = new URLSearchParams(searchParams);
+        const newParams = new URLSearchParams(searchParams.toString());
         newParams.delete('details');
-        setSearchParams(newParams, { replace: true });
-    }, [searchParams, setSearchParams]);    
+        updateParams(newParams, { replace: true });
+    }, [searchParams, updateParams]);    
     
     const handleSearch = useCallback((query: string) => {
         const trimmed = query.trim();
@@ -103,13 +127,13 @@ export const SearchView = () => {
             {showLoader && <Loader size={60} speed={0.8} thickness={3} />}
 
             <button onClick={handleRefreshData} className="refresh-button">
-                Refresh Data
+                {t('refreshData')}
             </button>
             
             <div className={`app-container ${selectedCharacterId ? 'with-details' : ''}`}>
                 <div className="results-wrapper">
                     <div className="search-section">
-                        <h2>Search</h2>
+                        <h2>{t('search')}</h2>
                         <SearchForm 
                             onSearch={handleSearch} 
                             loading={isLoading} 
@@ -118,7 +142,7 @@ export const SearchView = () => {
                     </div>
                     
                     <div className="results-section">
-                        <h2>Results ({filteredResults.length})</h2>
+                        <h2>{t('results')} ({filteredResults.length})</h2>
                         <ResultsTable 
                             results={paginatedResults} 
                             loading={isLoading} 

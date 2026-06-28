@@ -1,4 +1,3 @@
-// src/components/error-boundary/error-boundary.tsx
 import { Component, type ReactNode } from 'react';
 import './error-boundary.css';
 

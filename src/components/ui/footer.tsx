@@ -1,21 +1,21 @@
-import './module.css'
+import styles from './footer.module.css';
 
 export const Footer = () => {    
     return (
-        <footer className="app-footer">
-            <div className="footer-content">
-                <div className="footer-copyright">
+        <footer className={styles["app-footer"]}>
+            <div className={styles["footer-content"]}>
+                <div className={styles["footer-copyright"]}>
                 <p>© 2026 StarTrek Search App</p>
             </div>
-            <div className="footer-rsschool">
+            <div className={styles["footer-rsshool"]}>
                     <a 
                         href="https://rs.school/" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="footer-link"
+                        className={styles["footer-link"]}
                         aria-label="RS School"
                     >
-                        <svg className='icon'
+                        <svg className={styles["icon"]}
                             viewBox="0 0 64 64"
                             width="30" 
                             height="30"
@@ -34,16 +34,16 @@ export const Footer = () => {
                         RS School
                     </a>
                 </div>
-            <div className="footer-links">
+            <div className={styles["footer-links"]}>
                     <a 
                         href="https://github.com/rockabil" 
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="footer-link"
+                        className={styles["footer-link"]}
                         aria-label="GitHub"
                     >
                         <svg 
-                            className="icon" 
+                            className={styles["icon"]} 
                             viewBox="0 0 16 16" 
                             width="30" 
                             height="30"

@@ -1,4 +1,4 @@
-// src/components/test-error-button/test-error-button.tsx
+'use client';
 import { useState } from 'react';
 import './styles.css';
 
