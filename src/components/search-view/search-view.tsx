@@ -2,7 +2,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { SearchForm } from "../search-form/search-form";
+import SearchForm from "../search-form/search-form";
 import ResultsTable  from "../results-table/results-table";
 import { Pagination } from "../pagination/pagination";
 import DetailPanel from "../detail-panel/detail-panel";
